@@ -1,1 +1,171 @@
-# almaty-quake-risk
+[index.html](https://github.com/user-attachments/files/34903878/index.html)
+# almaty-quake-risk<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Who Carries Almaty's Earthquake Risk?</title>
+<style>
+  :root {
+    --ink: #1f1d1a;
+    --muted: #6b665e;
+    --paper: #faf8f4;
+    --line: #e4ded3;
+    --risk: #c2410c;
+    --calm: #0f766e;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: Georgia, "Times New Roman", serif;
+    color: var(--ink);
+    background: var(--paper);
+    line-height: 1.7;
+    font-size: 18px;
+  }
+  nav {
+    position: sticky; top: 0; z-index: 10;
+    background: var(--paper);
+    border-bottom: 1px solid var(--line);
+    font-family: system-ui, sans-serif;
+    font-size: 14px;
+  }
+  nav ul {
+    list-style: none; margin: 0 auto; padding: 12px 20px;
+    max-width: 900px; display: flex; gap: 18px; flex-wrap: wrap;
+  }
+  nav a { color: var(--muted); text-decoration: none; }
+  nav a:hover { color: var(--risk); }
+  header {
+    max-width: 900px; margin: 0 auto; padding: 64px 20px 32px;
+  }
+  header .kicker {
+    font-family: system-ui, sans-serif; font-size: 13px;
+    letter-spacing: .08em; text-transform: uppercase; color: var(--risk);
+  }
+  header h1 { font-size: 44px; line-height: 1.15; margin: 12px 0 16px; font-weight: normal; }
+  header p { color: var(--muted); font-size: 20px; max-width: 680px; }
+  .seismo { width: 100%; height: 70px; display: block; margin-top: 24px; }
+  .seismo polyline { fill: none; stroke: var(--risk); stroke-width: 1.5; }
+  main { max-width: 900px; margin: 0 auto; padding: 0 20px 80px; }
+  section { padding: 48px 0; border-top: 1px solid var(--line); }
+  section .num {
+    font-family: system-ui, sans-serif; font-size: 13px;
+    color: var(--risk); letter-spacing: .08em; text-transform: uppercase;
+  }
+  h2 { font-size: 32px; font-weight: normal; margin: 6px 0 20px; }
+  h3 { font-family: system-ui, sans-serif; font-size: 17px; margin: 28px 0 8px; }
+  .todo {
+    background: #fff4e6; border: 1px dashed var(--risk);
+    padding: 14px 18px; border-radius: 8px;
+    font-family: system-ui, sans-serif; font-size: 15px; color: #7c2d12;
+  }
+  .figure {
+    background: #fff; border: 1px solid var(--line); border-radius: 12px;
+    padding: 24px; margin: 24px 0; min-height: 160px;
+    font-family: system-ui, sans-serif; color: var(--muted); font-size: 15px;
+  }
+  .bill { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin: 20px 0; }
+  .bill div {
+    background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 16px;
+    font-family: system-ui, sans-serif; font-size: 15px;
+  }
+  .bill strong { display: block; color: var(--risk); margin-bottom: 6px; }
+  .verdict {
+    border-left: 4px solid var(--calm); padding: 8px 0 8px 20px; margin: 24px 0;
+    font-size: 22px;
+  }
+  footer {
+    max-width: 900px; margin: 0 auto; padding: 32px 20px 64px;
+    font-family: system-ui, sans-serif; font-size: 14px; color: var(--muted);
+    border-top: 1px solid var(--line);
+  }
+  @media (max-width: 600px) { header h1 { font-size: 32px; } body { font-size: 17px; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <ul>
+    <li><a href="#problem">1. Problem</a></li>
+    <li><a href="#data">2. Data</a></li>
+    <li><a href="#research">3. Research</a></li>
+    <li><a href="#solution">4. Solution &amp; bill</a></li>
+    <li><a href="#verdict">Verdict</a></li>
+    <li><a href="#transparency">AI transparency</a></li>
+    <li><a href="#sources">Sources</a></li>
+  </ul>
+</nav>
+
+<header>
+  <div class="kicker">PLS419 · An AI answer for Kazakhstan</div>
+  <h1>Who carries Almaty's earthquake risk?</h1>
+  <p>[Maple: your revised Section 1 question goes here, in your own words.]</p>
+  <svg class="seismo" viewBox="0 0 900 70" preserveAspectRatio="none" aria-hidden="true">
+    <polyline points="0,35 120,35 140,33 160,37 180,35 300,35 315,28 330,44 345,20 360,52 375,10 390,60 405,22 420,46 435,32 450,36 470,35 900,35"/>
+  </svg>
+</header>
+
+<main>
+
+  <section id="problem">
+    <div class="num">Section 1</div>
+    <h2>The problem</h2>
+    <div class="todo">Maple writes: who is affected, where, at what scale, how it is changing. 3+ credible sources. Name the social-science question.</div>
+  </section>
+
+  <section id="data">
+    <div class="num">Section 2</div>
+    <h2>Background &amp; data</h2>
+    <div class="todo">Maple writes: what the city, ministries and international bodies measure; what it shows; where the data is silent; how far it can be trusted.</div>
+    <div class="figure">[Your own chart goes here, built from real data.]</div>
+  </section>
+
+  <section id="research">
+    <div class="num">Section 3</div>
+    <h2>Current state of research</h2>
+    <div class="todo">Maple writes: 6+ academic sources grouped by approach. What is known, contested, missing. End with the gap.</div>
+  </section>
+
+  <section id="solution">
+    <div class="num">Section 4</div>
+    <h2>The AI-assisted solution, and what it would cost</h2>
+    <h3>The proposal</h3>
+    <div class="todo">Maple writes: what system, doing what, run by whom, reaching whom. 2+ real case studies.</div>
+    <h3>The bill</h3>
+    <div class="bill">
+      <div><strong>Environmental</strong>[energy, water, compute vs Kazakhstan's grid]</div>
+      <div><strong>Economic</strong>[cost, who pays, who profits]</div>
+      <div><strong>Labor</strong>[whose work changes; hidden labor]</div>
+      <div><strong>Political &amp; governance</strong>[control, surveillance, data localisation, AI Law No. 230-VIII]</div>
+      <div><strong>Data ethics</strong>[what data, whose consent, what could go wrong]</div>
+    </div>
+  </section>
+
+  <section id="verdict">
+    <div class="num">Verdict</div>
+    <h2>Should Kazakhstan do this?</h2>
+    <div class="verdict">[Yes / Only under these conditions / No, and here is why]</div>
+    <div class="todo">Maple writes: the verdict must follow from the bill above.</div>
+  </section>
+
+  <section id="transparency">
+    <div class="num">Disclosure</div>
+    <h2>AI transparency statement</h2>
+    <div class="todo">Maple writes: what AI contributed to the project and the site, what you accepted, what you rejected and why.</div>
+  </section>
+
+  <section id="sources">
+    <div class="num">References</div>
+    <h2>Sources</h2>
+    <div class="todo">Every source you cite, checked by you.</div>
+  </section>
+
+</main>
+
+<footer>
+  Maple · PLS419 AI from a Social Science Perspective · Nazarbayev University · Fall 2026
+</footer>
+
+</body>
+</html>
