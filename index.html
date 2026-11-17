@@ -3,7 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Who Carries Almaty's Earthquake Risk?</title>
+<title>What SHOOK Almaty</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..900;1,9..144,400..700&family=Manrope:wght@400;500;600;700&family=Unbounded:wght@500;700;900&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
 <style>
   :root {
     --ink: #1f1d1a;
@@ -44,6 +47,7 @@
   }
   header h1 { font-size: 44px; line-height: 1.15; margin: 12px 0 16px; font-weight: normal; }
   header p { color: var(--muted); font-size: 20px; max-width: 680px; }
+  header .ru { font-style: italic; color: var(--risk); font-size: 20px; margin: -6px 0 14px; }
   .seismo { width: 100%; height: 70px; display: block; margin-top: 24px; }
   .seismo polyline { fill: none; stroke: var(--risk); stroke-width: 1.5; }
   main { max-width: 900px; margin: 0 auto; padding: 0 20px 80px; }
@@ -64,12 +68,45 @@
     padding: 24px; margin: 24px 0; min-height: 160px;
     font-family: system-ui, sans-serif; color: var(--muted); font-size: 15px;
   }
+  .chart { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 22px 24px; margin: 28px 0; font-family: system-ui, sans-serif; }
+  .chart-title { font-size: 18px; font-weight: 600; color: var(--ink); }
+  .chart-sub { font-size: 14px; color: var(--muted); margin: 4px 0 12px; line-height: 1.5; }
+  .chart-wrap { position: relative; }
+  .chart svg { width: 100%; height: auto; display: block; overflow: visible; }
+  .chart .grid line { stroke: #eee8dd; stroke-width: 1; }
+  .chart .grid line.zero { stroke: #cfc6b8; }
+  .chart .axis text { font-size: 12px; fill: var(--muted); text-anchor: middle; }
+  .chart .rowt { font-size: 14px; fill: var(--ink); font-weight: 600; }
+  .chart .rows { font-size: 13px; fill: var(--muted); }
+  .chart .range { stroke: #f1c7ab; stroke-width: 4; stroke-linecap: round; }
+  .chart .dot { fill: var(--risk); stroke: #fff; stroke-width: 2; cursor: pointer; }
+  .chart .dot.hollow { fill: #fff; stroke: var(--risk); stroke-width: 2; }
+  .chart .dot:hover { r: 8; }
+  .chart .val { font-size: 12px; fill: var(--ink); text-anchor: middle; }
+  .chart .tip { position: absolute; pointer-events: none; background: var(--ink); color: #fff; font-size: 13px; padding: 6px 10px; border-radius: 6px; width: 240px; line-height: 1.4; transform: translate(-50%, -110%); }
+  .chart-table { margin-top: 10px; font-size: 14px; }
+  .chart-table summary { cursor: pointer; color: var(--muted); }
+  .chart-table table { border-collapse: collapse; margin-top: 8px; width: 100%; }
+  .chart-table th, .chart-table td { text-align: left; padding: 4px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
   .bill { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin: 20px 0; }
-  .bill div {
-    background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 16px;
-    font-family: system-ui, sans-serif; font-size: 15px;
+  .question {
+    background: #fff; border: 1px solid var(--line); border-left: 4px solid var(--risk);
+    padding: 18px 22px; margin: 32px 0 0;
   }
-  .bill strong { display: block; color: var(--risk); margin-bottom: 6px; }
+  .question p { margin: 6px 0 0; font-size: 20px; }
+  .refs p { font-size: 15px; padding-left: 2em; text-indent: -2em; margin: 0 0 10px; word-break: break-word; }
+  .spec { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin: 20px 0; }
+  .spec div { background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 16px; font-size: 16px; line-height: 1.6; }
+  .spec strong, .bill strong { display: block; font-family: system-ui, sans-serif; color: var(--risk); margin-bottom: 6px; font-size: 14px; letter-spacing: .02em; }
+  .cases { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin: 20px 0; }
+  .case { background: #fff; border: 1px solid var(--line); border-top: 4px solid var(--calm); padding: 18px 20px; }
+  .case h4 { margin: 4px 0 10px; font-size: 20px; font-weight: normal; }
+  .case p { font-size: 16px; }
+  .bill a { color: var(--ink); text-decoration: none; display: block; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 16px; font-family: system-ui, sans-serif; font-size: 15px; }
+  .bill a.heavy { border: 2px solid var(--risk); background: #fff4e6; }
+  .bill a:hover { border-color: var(--risk); }
+  .conditions li { margin-bottom: 10px; }
+  .closing { font-size: 24px; font-style: italic; color: var(--risk); margin-top: 28px; }
   .verdict {
     border-left: 4px solid var(--calm); padding: 8px 0 8px 20px; margin: 24px 0;
     font-size: 22px;
@@ -79,92 +116,786 @@
     font-family: system-ui, sans-serif; font-size: 14px; color: var(--muted);
     border-top: 1px solid var(--line);
   }
-  @media (max-width: 600px) { header h1 { font-size: 32px; } body { font-size: 17px; } }
+  @media (max-width: 600px) { .spec { grid-template-columns: 1fr; } header h1 { font-size: 32px; } body { font-size: 17px; } }
+  :root {
+    --ink: #1b1f2e;
+    --muted: #5f6475;
+    --paper: #f6f3ec;
+    --line: #e2dccf;
+    --risk: #e0590b;
+    --calm: #13806b;
+    --night: #0f1530;
+    --night2: #1c2547;
+    --glow: #ffc65c;
+  }
+  nav { background: var(--night) !important; border-bottom: 1px solid #263063 !important; }
+  nav a { color: #b9c0dc !important; }
+  nav a:hover, nav a.active { color: var(--glow) !important; }
+  .hero { position: relative; min-height: 88vh; min-height: max(88vh, 600px); max-width: none; margin: 0; padding: 0; overflow: hidden; background: linear-gradient(#0b1026 0%, #141b3a 55%, #20295a 100%); color: #eef1fb; display: flex; align-items: flex-start; }
+  .scene { position: absolute; inset: 0; }
+  .sky { position: absolute; bottom: 0; left: 0; width: 100%; height: 100%; }
+  .hero-text { position: relative; z-index: 2; max-width: 900px; width: 100%; margin: 0 auto; padding: 72px 20px 0; }
+  .hero .kicker { color: var(--glow); }
+  .hero h1 { font-size: 64px; line-height: 1.05; margin: 14px 0 12px; font-weight: normal; color: #fff; }
+  .hero .shook { display: inline-block; color: var(--glow); font-weight: bold; letter-spacing: .02em; }
+  .hero .ru { color: #ffb37a; font-size: 22px; }
+  .hero p { color: #c9cfe6; font-size: 21px; max-width: 640px; }
+  .clock { display: inline-flex; align-items: center; gap: 8px; font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 14px; color: #ffd9a8; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.14); padding: 6px 12px; border-radius: 999px; }
+  .dot-live { width: 8px; height: 8px; border-radius: 50%; background: #ff5a3c; box-shadow: 0 0 0 0 rgba(255,90,60,.6); animation: pulse 1.6s infinite; }
+  .blink { animation: blink 1s steps(1) infinite; }
+  .seismo { max-width: 640px; margin-top: 18px; }
+  .seismo polyline { stroke: var(--glow); stroke-width: 2; fill: none; }
+  .hero-actions { display: flex; gap: 14px; margin-top: 18px; font-family: system-ui, sans-serif; font-size: 15px; }
+  .hero-actions button, .hero-actions a { cursor: pointer; border-radius: 999px; padding: 9px 16px; text-decoration: none; }
+  .hero-actions button { background: var(--glow); color: #2a1a00; border: 0; font: inherit; font-weight: 600; }
+  .hero-actions a { color: #eef1fb; border: 1px solid rgba(255,255,255,.3); }
+  .win { fill: #26305c; transition: fill .4s; }
+  .win.on { fill: var(--glow); }
+  .bld { fill: #0b1022; }
+  .roof { fill: #121937; }
+  @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255,90,60,.6); } 70% { box-shadow: 0 0 0 10px rgba(255,90,60,0); } 100% { box-shadow: 0 0 0 0 rgba(255,90,60,0); } }
+  @keyframes blink { 50% { opacity: 0; } }
+  @keyframes quake {
+    0%,100% { transform: translate(0,0) rotate(0); }
+    8% { transform: translate(-9px,3px) rotate(-.4deg); } 16% { transform: translate(8px,-4px) rotate(.4deg); }
+    24% { transform: translate(-10px,2px) rotate(-.3deg); } 32% { transform: translate(9px,4px) rotate(.3deg); }
+    40% { transform: translate(-7px,-3px) rotate(-.2deg); } 50% { transform: translate(6px,2px); }
+    60% { transform: translate(-4px,-2px); } 70% { transform: translate(3px,1px); } 82% { transform: translate(-2px,0); } 92% { transform: translate(1px,0); }
+  }
+  @keyframes draw { from { stroke-dashoffset: 1200; } to { stroke-dashoffset: 0; } }
+  .quaking .scene, .quaking h1 { animation: quake 1.8s cubic-bezier(.36,.07,.19,.97) both; }
+  .quaking .seismo polyline { stroke-dasharray: 1200; animation: draw 1.8s ease-out both; }
+  @media (prefers-reduced-motion: reduce) { .quaking .scene, .quaking h1, .quaking .seismo polyline { animation: none; } .dot-live, .blink { animation: none; } }
+  section { border-top: 0 !important; position: relative; }
+  section::before { content: ""; display: block; height: 22px; margin-bottom: 26px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 900 22' preserveAspectRatio='none'%3E%3Cpolyline points='0,11 380,11 395,7 405,15 415,3 425,19 435,6 445,14 455,11 900,11' fill='none' stroke='%23d9cfbd' stroke-width='1.5'/%3E%3C/svg%3E") center/100% 100% no-repeat; }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 26px 0; }
+  .stat { background: var(--night); color: #eef1fb; border-radius: 12px; padding: 18px 16px; font-family: system-ui, sans-serif; }
+  .stat .n { font-size: 34px; font-weight: 700; color: var(--glow); line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .stat .l { font-size: 13.5px; color: #c9cfe6; margin-top: 6px; line-height: 1.4; }
+  .stat .s { font-size: 11.5px; color: #8b93b5; margin-top: 8px; }
+  .stat.hi { background: var(--risk); }
+  .stat.hi .n { color: #fff; } .stat.hi .l { color: #fff3e8; } .stat.hi .s { color: #ffd9c2; }
+  .access { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 20px 22px; margin: 26px 0; font-family: system-ui, sans-serif; }
+  .access .t { font-size: 18px; font-weight: 600; }
+  .access .sub { font-size: 14px; color: var(--muted); margin: 2px 0 14px; }
+  .lvl { display: grid; grid-template-columns: 210px 1fr; align-items: center; gap: 12px; padding: 7px 0; border-top: 1px solid #f0ebe1; font-size: 15px; }
+  .bar { height: 26px; border-radius: 6px; display: flex; align-items: center; padding: 0 10px; font-size: 13px; font-weight: 600; }
+  .bar.yes { background: #d5efe7; color: #0b5a4a; width: 100%; }
+  .bar.maybe { background: #fde7c7; color: #8a4a05; width: 66%; }
+  .bar.req { background: #fde7c7; color: #8a4a05; width: 40%; }
+  .bar.no { background: #fbe0d6; color: #a3330d; width: 14%; min-width: 150px; }
+  .access .src { font-size: 12.5px; color: var(--muted); margin-top: 10px; }
+  .footer-city { display: block; width: 100%; height: 160px; margin-top: 40px; background: linear-gradient(var(--paper), #1c2547 35%); }
+  footer { max-width: none !important; background: var(--night); color: #b9c0dc !important; border-top: 0 !important; padding: 0 0 40px !important; }
+  footer .ft { max-width: 900px; margin: 0 auto; padding: 18px 20px 0; }
+  .verdict { border-left-color: var(--risk) !important; background: #fff; padding: 16px 20px !important; }
+  .closing { color: var(--risk); }
+  @media (max-width: 760px) { .stats { grid-template-columns: repeat(2, 1fr); } .hero h1 { font-size: 42px; } .lvl { grid-template-columns: 1fr; } .hero-text { padding-top: 48px; } }
+  nav ul { max-width: 1240px !important; justify-content: center; align-items: center; gap: 10px !important; padding: 12px 20px !important; }
+  nav a { display: inline-block; padding: 7px 16px; border: 1.5px solid var(--glow); border-radius: 999px; color: #fff !important; font-size: 15px; white-space: nowrap; transition: background .2s, color .2s; }
+  nav a:hover { background: rgba(255,198,92,.16); color: #fff !important; }
+  nav a.active { background: var(--glow); color: #1b1f2e !important; font-weight: 600; }
+  @media (max-width: 760px) { nav ul { flex-wrap: nowrap !important; justify-content: flex-start; overflow-x: auto; scrollbar-width: none; } nav ul::-webkit-scrollbar { display: none; } }
+  .clock { margin-bottom: 22px; }
+  @keyframes blink { 50% { opacity: .3; } }
+  .byline { font-family: system-ui, sans-serif; font-size: 15px; color: #c9cfe6; margin-top: 6px; letter-spacing: .02em; }
+  :root {
+    --soil: #2a2019;
+    --card: #362a20;
+    --card2: #3f3226;
+    --ink: #efe4cf;
+    --muted: #c4b59a;
+    --line: #54432f;
+    --paper: #2a2019;
+    --moss: #8fb573;
+    --calm: #8fb573;
+    --risk: #ef8a3c;
+    --glow: #ffc65c;
+  }
+  body { font-family: "Manrope", system-ui, sans-serif !important; background: var(--soil) !important; color: var(--ink) !important; font-size: 18px; line-height: 1.75; }
+  h1, h2, h4, .verdict, .closing, .question p, .hero .ru { font-family: "Fraunces", Georgia, serif; }
+  h2 { font-size: 40px !important; font-weight: 600 !important; letter-spacing: -.01em; color: var(--ink); }
+  h3 { font-family: "Manrope", system-ui, sans-serif; color: var(--moss); font-size: 18px; letter-spacing: .01em; }
+  .hero h1 { font-family: "Fraunces", Georgia, serif; font-weight: 500; font-size: 68px; }
+  .hero .shook { font-weight: 900; }
+  section .num { color: var(--moss) !important; font-family: "Manrope", system-ui, sans-serif; font-weight: 700; }
+  main p { color: var(--ink); }
+  a { color: var(--glow); }
+  .strata { display: block; width: 100%; height: 90px; margin-top: -2px; }
+  section::before { background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 900 22' preserveAspectRatio='none'%3E%3Cpolyline points='0,11 380,11 395,7 405,15 415,3 425,19 435,6 445,14 455,11 900,11' fill='none' stroke='%236b5a44' stroke-width='1.5'/%3E%3C/svg%3E") center/100% 100% no-repeat !important; }
+  .chart, .access, .spec div, .case, .bill a, .question, .verdict { background: var(--card) !important; border-color: var(--line) !important; color: var(--ink); }
+  .case { border-top: 4px solid var(--moss) !important; }
+  .question { border-left: 4px solid var(--risk) !important; }
+  .verdict { border-left: 4px solid var(--moss) !important; }
+  .bill a { color: var(--ink) !important; }
+  .bill a.heavy { background: #4a2e1c !important; border: 2px solid var(--risk) !important; }
+  .chart-title, .access .t { color: var(--ink) !important; }
+  .chart-sub, .access .sub, .access .src, .chart-table summary { color: var(--muted) !important; }
+  .chart .grid line { stroke: #4a3b2d !important; }
+  .chart .grid line.zero { stroke: #7a6650 !important; }
+  .chart .axis text, .chart .rows { fill: var(--muted) !important; }
+  .chart .rowt, .chart .val { fill: var(--ink) !important; }
+  .chart .range { stroke: #7a4a28 !important; }
+  .chart .dot { stroke: var(--card) !important; fill: var(--risk) !important; }
+  .chart .dot.hollow { fill: var(--card) !important; stroke: var(--risk) !important; }
+  .chart .tip { background: #120d09 !important; color: var(--ink) !important; border: 1px solid var(--line); }
+  .chart-table th, .chart-table td { border-bottom-color: var(--line) !important; }
+  .lvl { border-top-color: #4a3b2d !important; }
+  .stat { background: #1f2a1a !important; border: 1px solid #3f5a35; }
+  .stat .n { color: var(--glow) !important; }
+  .stat .l { color: #e2d8c2 !important; } .stat .s { color: #a9b896 !important; }
+  .stat.hi { background: #b8541c !important; border-color: #ef8a3c; }
+  .stat.hi .n, .stat.hi .l { color: #fff7ec !important; } .stat.hi .s { color: #ffd9bf !important; }
+  .refs p { color: var(--muted); }
+  .closing { color: var(--glow) !important; font-weight: 500; }
+  .footer-city { background: linear-gradient(var(--soil), #1c2547 35%) !important; }
+  .quake-map { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 18px 20px; margin: 28px 0; font-family: "Manrope", system-ui, sans-serif; }
+  .quake-map .t { font-size: 18px; font-weight: 700; color: var(--ink); }
+  .quake-map .sub { font-size: 14px; color: var(--muted); margin: 2px 0 12px; }
+  #map { height: 420px; border-radius: 8px; background: #1f1812; }
+  #map .fallback { padding: 30px; color: var(--muted); font-size: 15px; }
+  .epi-pulse { width: 18px; height: 18px; border-radius: 50%; background: #ff5a3c; box-shadow: 0 0 0 0 rgba(255,90,60,.7); animation: epi 1.6s infinite; border: 2px solid #fff; }
+  @keyframes epi { 0% { box-shadow: 0 0 0 0 rgba(255,90,60,.7); } 70% { box-shadow: 0 0 0 26px rgba(255,90,60,0); } 100% { box-shadow: 0 0 0 0 rgba(255,90,60,0); } }
+  .city-dot { width: 14px; height: 14px; border-radius: 50%; background: var(--glow); border: 2px solid #2a2019; }
+  .map-label { background: rgba(42,32,25,.92) !important; color: #efe4cf !important; border: 1px solid #54432f !important; font-family: "Manrope", system-ui, sans-serif; font-size: 13px; font-weight: 600; box-shadow: none !important; }
+  .map-label::before { display: none; }
+  .leaflet-container { font-family: "Manrope", system-ui, sans-serif; }
+  @media (max-width: 760px) { h2 { font-size: 32px !important; } .hero h1 { font-size: 44px; } #map { height: 320px; } }
+
+  .viz { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 20px 22px; margin: 28px 0; font-family: "Manrope", system-ui, sans-serif; }
+  .viz .t { font-size: 18px; font-weight: 700; color: var(--ink); }
+  .viz .sub { font-size: 14px; color: var(--muted); margin: 2px 0 14px; line-height: 1.5; }
+  .viz .src { font-size: 12.5px; color: var(--muted); margin-top: 12px; }
+  .hrow { display: grid; grid-template-columns: 250px 1fr 80px; gap: 12px; align-items: center; margin: 8px 0; font-size: 15px; }
+  .track { background: #2a2019; border-radius: 6px; height: 22px; position: relative; overflow: hidden; }
+  .fill { height: 100%; border-radius: 6px; background: var(--moss); width: 0; transition: width 1.2s cubic-bezier(.2,.8,.2,1); }
+  .fill.risk { background: var(--risk); } .fill.glow { background: var(--glow); } .fill.ghost { background: #54432f; }
+  .hval { font-weight: 700; color: var(--ink); text-align: right; font-variant-numeric: tabular-nums; }
+  .legend { display: flex; gap: 16px; font-size: 13px; color: var(--muted); margin: 0 0 8px; }
+  .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+  .pair .track { height: 14px; margin: 3px 0; }
+  .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .tile { background: #2a2019; border: 1px solid var(--line); border-radius: 10px; padding: 14px; font-size: 14px; line-height: 1.5; }
+  .tile b { display: block; color: var(--ink); font-size: 15px; margin-bottom: 6px; }
+  .tile .sees { color: #a9d18e; } .tile .miss { color: #f2a36b; }
+  .tile .big { font-family: "Fraunces", Georgia, serif; font-size: 34px; color: var(--glow); line-height: 1; margin-bottom: 8px; }
+  .tag { display: inline-block; font-size: 11.5px; font-weight: 700; padding: 2px 8px; border-radius: 999px; margin-top: 8px; }
+  .tag.no { background: #4a2e1c; color: #f2a36b; } .tag.yes { background: #2f4227; color: #a9d18e; }
+  .pipe { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; counter-reset: step; }
+  .step { position: relative; background: #2a2019; border: 1px solid var(--line); border-radius: 10px; padding: 16px 14px 14px; font-size: 14px; line-height: 1.5; }
+  .step::before { counter-increment: step; content: counter(step); position: absolute; top: -12px; left: 14px; width: 24px; height: 24px; border-radius: 50%; background: var(--glow); color: #2a2019; font-weight: 800; font-size: 13px; display: flex; align-items: center; justify-content: center; }
+  .step b { display: block; color: var(--ink); font-size: 15px; margin: 4px 0 4px; }
+  .step:not(:last-child)::after { content: "→"; position: absolute; right: -10px; top: 50%; transform: translate(50%, -50%); color: var(--glow); font-size: 18px; z-index: 1; }
+  .step.human { border-color: var(--moss); }
+  .receipt { background: #efe4cf; color: #2a2019; border-radius: 6px; padding: 18px 20px; font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 14px; max-width: 520px; margin: 22px auto; box-shadow: 0 6px 0 -3px #c4b59a; }
+  .receipt .rt { text-align: center; font-weight: 800; letter-spacing: .08em; margin-bottom: 10px; }
+  .receipt .rl { display: flex; justify-content: space-between; gap: 14px; padding: 3px 0; border-bottom: 1px dashed #b9a988; }
+  .receipt .rl.tot { border-bottom: 0; border-top: 2px solid #2a2019; margin-top: 6px; padding-top: 8px; font-weight: 800; }
+  .receipt .rn { font-size: 12px; margin-top: 10px; color: #5b4330; }
+  .lvl-tag { display: inline-block; font-style: normal; font-size: 11.5px; font-weight: 800; padding: 2px 9px; border-radius: 999px; margin-top: 8px; letter-spacing: .03em; }
+  .lvl-tag.low { background: #2f4227; color: #a9d18e; } .lvl-tag.med { background: #4f3d1c; color: #ffc65c; } .lvl-tag.high { background: #5a2a14; color: #ffb08a; }
+  .conditions { list-style: none; padding: 0; counter-reset: c; }
+  .conditions li { position: relative; padding: 12px 14px 12px 52px; background: var(--card); border: 1px solid var(--line); border-radius: 10px; margin-bottom: 10px !important; }
+  .conditions li::before { content: "✓"; position: absolute; left: 14px; top: 12px; width: 26px; height: 26px; border-radius: 50%; background: #2f4227; color: #a9d18e; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+  @media (max-width: 760px) { .grid4, .pipe { grid-template-columns: 1fr 1fr; } .hrow { grid-template-columns: 1fr 60px; } .hrow > span:first-child { grid-column: 1 / -1; } .step::after { display: none; } }
+  nav { transition: background .5s ease, border-color .5s ease; }
+  nav.underground { background: rgba(42,32,25,.97) !important; border-bottom: 1px solid #54432f !important; }
+
+  .orn-band { height: 24px; background: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2748%27 height=%2724%27 viewBox=%270 0 48 24%27%3E%3Cg fill=%27none%27 stroke=%27%23ffc65c%27 stroke-width=%271.6%27 stroke-linecap=%27round%27 opacity=%27.75%27%3E%3Cpath d=%27M24 23 C24 12 18 5 12 7 C6.5 9 7.5 17 13 16 C16 15.4 15.6 11.6 12.8 12%27/%3E%3Cpath d=%27M24 23 C24 12 30 5 36 7 C41.5 9 40.5 17 35 16 C32 15.4 32.4 11.6 35.2 12%27/%3E%3Cpath d=%27M24 9 L26 6 L24 3 L22 6 Z%27 fill=%27%23ffc65c%27 stroke=%27none%27/%3E%3Cpath d=%27M0 23 H48%27 opacity=%27.5%27/%3E%3C/g%3E%3C/svg%3E") 0 0 / 48px 24px repeat-x; position: relative; z-index: 3; }
+  .hero h1 { font-family: "Unbounded", "Manrope", sans-serif !important; font-weight: 700 !important; font-size: 58px !important; letter-spacing: -.01em; line-height: 1.1 !important; }
+  .hero .shook { font-weight: 900 !important; }
+  h2 { font-family: "Unbounded", "Manrope", sans-serif !important; font-weight: 700 !important; font-size: 32px !important; letter-spacing: -.01em; }
+  h3 { font-family: "Manrope", system-ui, sans-serif !important; font-weight: 800; color: var(--moss) !important; font-size: 19px !important; }
+  section .num, .clock { font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace !important; letter-spacing: .12em !important; }
+  main { max-width: 980px !important; }
+  main > section { background: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27420%27 height=%27420%27 viewBox=%270 0 420 420%27%3E%3Cg fill=%27none%27 stroke=%27%23efe4cf%27 stroke-opacity=%27.055%27 stroke-width=%271.2%27%3E%3Cpath d=%27M120 140 C160 80 260 90 280 150 C300 210 230 260 170 240 C110 220 90 180 120 140 Z%27/%3E%3Cpath d=%27M95 135 C140 55 285 65 310 150 C335 235 240 290 160 265 C85 242 60 190 95 135 Z%27/%3E%3Cpath d=%27M70 130 C120 30 310 40 340 150 C370 260 250 320 150 292 C60 266 30 200 70 130 Z%27/%3E%3Cpath d=%27M45 125 C100 5 335 15 370 150 C405 285 260 350 140 318 C35 290 0 210 45 125 Z%27/%3E%3Cpath d=%27M300 330 C330 310 380 320 385 350 C390 380 350 395 320 385 C295 377 285 345 300 330 Z%27/%3E%3Cpath d=%27M285 320 C325 290 400 305 408 352 C415 398 350 415 312 402 C278 390 265 340 285 320 Z%27/%3E%3Cpath d=%27M190 175 C205 160 235 165 238 185 C240 205 215 212 198 205 C185 199 182 185 190 175 Z%27/%3E%3C/g%3E%3C/svg%3E") 0 0 / 420px 420px repeat, #31261d; border: 1px solid #54432f; border-radius: 16px; padding: 54px 44px 40px !important; margin: 44px 0; box-shadow: 0 1px 0 #3d3024 inset; }
+  main > section::before { margin-top: 6px; }
+  main > section .num { display: inline-block; background: #241b14; border: 1px solid #54432f; border-radius: 6px; padding: 4px 10px; font-size: 12px !important; }
+  .viz, .chart, .access, .quake-map, .spec div, .case, .bill a, .question, .verdict, .conditions li { background-color: #3b2e23 !important; }
+  @media (max-width: 760px) { main > section { padding: 44px 18px 28px !important; } .hero h1 { font-size: 36px !important; } h2 { font-size: 25px !important; } }
+
+  main > section { padding-top: 40px !important; }
+  body { background: linear-gradient(#2a2019 0%, #241b14 40%, #1b140e 75%, #140e09 100%) !important; }
+  .critter { position: absolute; pointer-events: none; z-index: 0; }
+  .critter.l { left: -150px; } .critter.r { right: -150px; }
+  .critter svg { display: block; }
+  @media (prefers-reduced-motion: no-preference) {
+    .wiggle { animation: wiggle 3.5s ease-in-out infinite; transform-origin: center; }
+    .march { animation: march 6s linear infinite; }
+    .zzz { animation: zzz 2.6s ease-in-out infinite; }
+  }
+  @keyframes wiggle { 0%,100% { transform: translateX(0) scaleX(1); } 50% { transform: translateX(6px) scaleX(1.06); } }
+  @keyframes march { 0% { transform: translateY(0); } 100% { transform: translateY(40px); } }
+  @keyframes zzz { 0%,100% { opacity: .2; transform: translateY(4px); } 50% { opacity: 1; transform: translateY(-4px); } }
+  @media (max-width: 1260px) { .critter { display: none; } }
+
+  html.js-reveal main > section { opacity: 0; transform: translateY(48px) scale(.985); transition: opacity .9s ease, transform .9s cubic-bezier(.2,.8,.2,1); }
+  html.js-reveal main > section.in { opacity: 1; transform: none; }
+  html.js-reveal main > section::before { clip-path: inset(0 100% 0 0); transition: clip-path 1.4s cubic-bezier(.6,0,.2,1) .25s; }
+  html.js-reveal main > section.in::before { clip-path: inset(0 0 0 0); }
+  html.js-reveal main > section h2 .w { display: inline-block; opacity: 0; transform: translateY(.7em) rotate(4deg); filter: blur(6px); transition: opacity .6s ease, transform .7s cubic-bezier(.2,.9,.3,1.3), filter .6s ease; transition-delay: calc(.35s + var(--i) * 90ms); }
+  html.js-reveal main > section.in h2 .w { opacity: 1; transform: none; filter: none; }
+  html.js-reveal main > section > :not(.num):not(h2) { opacity: 0; transform: translateY(22px); transition: opacity .8s ease, transform .8s cubic-bezier(.2,.8,.2,1); transition-delay: var(--d, 0s); }
+  html.js-reveal main > section.in > :not(.num):not(h2) { opacity: 1; transform: none; }
+  .num .cursor { display: inline-block; width: .55em; margin-left: 2px; border-bottom: 2px solid currentColor; animation: blink 1s steps(1) infinite; }
+
+  .icon { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+  .lvl > span { display: flex; align-items: center; gap: 10px; }
+  .lvl .icon { color: var(--glow); }
+  .stat-ic { color: var(--glow); width: 26px; height: 26px; margin-bottom: 8px; display: block; }
+  .stat.hi .stat-ic { color: #fff7ec; }
+  .tile-ic { color: var(--glow); width: 26px; height: 26px; display: block; margin-bottom: 8px; }
+  .step .tile-ic { margin-top: 6px; }
+  .bill a .tile-ic { color: var(--risk); }
+  .big-ic { width: 34px; height: 34px; color: var(--glow); }
+  @keyframes popin { 0% { opacity: 0; transform: translateY(18px) scale(.94); } 70% { opacity: 1; transform: translateY(-3px) scale(1.01); } 100% { opacity: 1; transform: none; } }
+  @keyframes growx { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @keyframes draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+  @keyframes drop { 0% { opacity: 0; transform: translateY(-40px); } 60% { opacity: 1; transform: translateY(4px); } 80% { transform: translateY(-2px); } 100% { opacity: 1; transform: none; } }
+  @keyframes wobble { 0%,100% { transform: rotate(0); } 20% { transform: rotate(-14deg); } 40% { transform: rotate(10deg); } 60% { transform: rotate(-6deg); } 80% { transform: rotate(3deg); } }
+  @keyframes printout { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
+  @keyframes tick { 0% { transform: scale(0); } 70% { transform: scale(1.3); } 100% { transform: scale(1); } }
+  @keyframes pulse1 { 0%,100% { transform: scale(1); } 50% { transform: scale(1.18); } }
+  html.js-reveal [data-anim]:not(.play) > * { opacity: 0; }
+  html.js-reveal [data-anim].play > * { animation: popin .65s cubic-bezier(.2,.9,.3,1.2) both; animation-delay: calc(.15s + var(--i, 0) * .11s); }
+  html.js-reveal [data-anim]:not(.play) .icon path { stroke-dasharray: 1; stroke-dashoffset: 1; }
+  html.js-reveal [data-anim].play .icon path { stroke-dasharray: 1; animation: draw 1s ease both; animation-delay: calc(.35s + var(--i, 0) * .11s); }
+  html.js-reveal .access .bar { transform-origin: left center; }
+  html.js-reveal .access:not(.play) .bar { transform: scaleX(0); }
+  html.js-reveal .access.play .bar { animation: growx .9s cubic-bezier(.2,.8,.2,1) both; animation-delay: calc(.45s + var(--i, 0) * .14s); }
+  html.js-reveal .chart:not(.play) .dot { opacity: 0; }
+  html.js-reveal .chart.play .dot { animation: drop .8s cubic-bezier(.3,1.3,.5,1) both; animation-delay: calc(.9s + var(--k, 0) * .09s); }
+  html.js-reveal .chart:not(.play) .range { stroke-dasharray: 1; stroke-dashoffset: 1; }
+  html.js-reveal .chart.play .range { stroke-dasharray: 1; animation: draw 1s ease both; animation-delay: calc(.5s + var(--k, 0) * .2s); }
+  html.js-reveal .receipt.play { animation: printout 1.6s steps(14) both; }
+  html.js-reveal .receipt:not(.play) { opacity: 0; }
+  html.js-reveal .receipt.play > * { animation: none; opacity: 1; }
+  html.js-reveal .tile .big:not(:has(svg)) { display: inline-block; }
+  html.js-reveal [data-anim].play .tile .big { animation: wobble 1s ease both; animation-delay: calc(.7s + var(--i, 0) * .11s); }
+  html.js-reveal .conditions:not(.play) li::before { transform: scale(0); }
+  html.js-reveal .conditions.play li::before { animation: tick .5s cubic-bezier(.3,1.5,.5,1) both; animation-delay: calc(.5s + var(--i, 0) * .2s); }
+  html.js-reveal .bill.play .lvl-tag { animation: pulse1 .6s ease both; animation-delay: calc(1s + var(--i, 0) * .12s); }
 </style>
 </head>
 <body>
 
 <nav>
   <ul>
-    <li><a href="#problem">1. Problem</a></li>
-    <li><a href="#data">2. Data</a></li>
-    <li><a href="#research">3. Research</a></li>
-    <li><a href="#solution">4. Solution &amp; bill</a></li>
+    <li><a href="#problem">1 The problem</a></li>
+    <li><a href="#data">2 Background &amp; data</a></li>
+    <li><a href="#research">3 Research</a></li>
+    <li><a href="#solution">4 Solution &amp; bill</a></li>
     <li><a href="#verdict">Verdict</a></li>
     <li><a href="#transparency">AI transparency</a></li>
     <li><a href="#sources">Sources</a></li>
   </ul>
 </nav>
 
-<header>
-  <div class="kicker">PLS419 · An AI answer for Kazakhstan</div>
-  <h1>Who carries Almaty's earthquake risk?</h1>
-  <p>[Maple: your revised Section 1 question goes here, in your own words.]</p>
-  <svg class="seismo" viewBox="0 0 900 70" preserveAspectRatio="none" aria-hidden="true">
-    <polyline points="0,35 120,35 140,33 160,37 180,35 300,35 315,28 330,44 345,20 360,52 375,10 390,60 405,22 420,46 435,32 450,36 470,35 900,35"/>
-  </svg>
+<header class="hero" id="top">
+  <div class="scene" id="scene" aria-hidden="true">
+    <svg class="sky" id="sky" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMax slice">
+      <g id="stars"></g>
+      <circle cx="1010" cy="120" r="34" fill="#f4ecd2" opacity=".9"/>
+      <circle cx="1024" cy="110" r="30" fill="#141b3a"/>
+      <path d="M0 470 L90 400 L170 430 L260 330 L330 380 L420 280 L470 310 L560 230 L640 300 L720 250 L800 320 L880 260 L960 330 L1040 290 L1120 360 L1200 330 L1200 700 L0 700 Z" fill="#232c55"/>
+      <path d="M397 303 L420 280 L447 298 L432 296 L420 304 L408 298 Z M532 258 L560 230 L592 262 L574 258 L561 268 L547 259 Z M698 272 L720 250 L746 271 L731 268 L719 276 L708 270 Z M858 282 L880 260 L905 281 L891 278 L879 286 L868 280 Z" fill="#dfe6f5" opacity=".8"/>
+      <path d="M0 520 L120 470 L230 500 L340 440 L450 490 L560 450 L690 500 L800 460 L930 505 L1060 470 L1200 500 L1200 700 L0 700 Z" fill="#1a2146"/>
+      <g id="city"></g>
+      <rect x="0" y="690" width="1200" height="10" fill="#090d20"/>
+    </svg>
+  </div>
+  <div class="hero-text">
+    <div class="clock"><span class="dot-live"></span>00<span class="blink">:</span>09 · 23 January 2024 · Almaty</div>
+    <div class="kicker">PLS419 · An AI answer for Kazakhstan</div>
+    <div class="byline">Korlan Zhomart · Nazarbayev University</div>
+    <h1>What <span class="shook" id="shook">SHOOK</span> Almaty</h1>
+    <div class="ru" lang="ru">Что СТРЯСЛОСЬ в Алматы</div>
+    <p>Who carries the city's earthquake risk, and who gets to see the data?</p>
+    <svg class="seismo" viewBox="0 0 900 70" preserveAspectRatio="none" aria-hidden="true">
+      <polyline id="seismo-line" points="0,35 120,35 140,33 160,37 180,35 300,35 315,28 330,44 345,20 360,52 375,10 390,60 405,22 420,46 435,32 450,36 470,35 900,35"/>
+    </svg>
+    <div class="hero-actions">
+      <button type="button" id="replay">↻ Feel it again</button>
+      <a href="#problem" class="start">Start reading ↓</a>
+    </div>
+  </div>
 </header>
+<svg class="strata" viewBox="0 0 1200 90" preserveAspectRatio="none" aria-hidden="true">
+  <rect width="1200" height="90" fill="#2a2019"/>
+  <path d="M0 0 H1200 V22 C1000 30 820 14 600 24 C380 34 200 16 0 26 Z" fill="#3f5a35"/>
+  <path d="M0 26 C200 16 380 34 600 24 C820 14 1000 30 1200 22 V40 C980 50 800 34 600 44 C400 54 210 36 0 46 Z" fill="#5b4330"/>
+  <path d="M0 46 C210 36 400 54 600 44 C800 34 980 50 1200 40 V58 C1000 66 790 52 600 62 C410 72 190 56 0 64 Z" fill="#7a5a3c"/>
+  <path d="M0 64 C190 56 410 72 600 62 C790 52 1000 66 1200 58 V74 C990 80 800 70 600 78 C400 86 200 72 0 80 Z" fill="#4a3627"/>
+  <polyline points="455,0 470,30 462,52 478,90" fill="none" stroke="#1a130d" stroke-width="2"/>
+</svg>
 
 <main>
 
   <section id="problem">
-    <div class="num">Section 1</div>
+    <div class="num">Field note 01</div>
     <h2>The problem</h2>
-    <div class="todo">Maple writes: who is affected, where, at what scale, how it is changing. 3+ credible sources. Name the social-science question.</div>
+    <p>At 00:09 on 23 January 2024, Almaty woke up shaking. An earthquake of magnitude 6.7, with its epicentre about 264 kilometres south-east of the city near the Kyrgyzstan–China border, reached 5 points in Almaty on the MSK-64 intensity scale (Daribay, 2024). No warning came from the 112 rescue service. People ran out into the snow in slippers and without coats, roads out of the city jammed, and queues formed at petrol stations. Some of the official gathering points for residents, mostly schools, turned out to be closed. Nobody died and no buildings collapsed, but 44 people sought medical help for injuries (Rakhimzhan, 2024).</p>
+    <figure class="quake-map">
+      <figcaption class="t">Where the 23 January 2024 earthquake struck</figcaption>
+      <div class="sub">The epicentre lay about 264 km south-east of Almaty, on the Kyrgyzstan–China border (Daribay, 2024). The pulsing dot marks its approximate position. Drag or zoom to explore.</div>
+      <div id="map"><svg viewBox="0 0 800 420" width="100%" height="100%" role="img" aria-label="Schematic: the epicentre lay about 264 km south-east of Almaty" style="display:block">
+        <rect width="800" height="420" fill="#1f1812"/>
+        <path d="M0 250 L120 200 L210 230 L320 160 L420 210 L520 150 L640 210 L800 170 L800 420 L0 420 Z" fill="#2e251c"/>
+        <g fill="none" stroke="#ef8a3c" stroke-dasharray="4 6" opacity=".7"><circle cx="560" cy="330" r="50"/><circle cx="560" cy="330" r="105"/><circle cx="560" cy="330" r="160"/></g>
+        <line x1="250" y1="110" x2="560" y2="330" stroke="#efe4cf" stroke-width="2" stroke-dasharray="8 6"/>
+        <circle cx="250" cy="110" r="9" fill="#ffc65c" stroke="#2a2019" stroke-width="2"/>
+        <circle cx="560" cy="330" r="10" fill="#ff5a3c" stroke="#fff" stroke-width="2"/>
+        <text x="236" y="98" fill="#efe4cf" font-size="15" text-anchor="end" font-family="Manrope, system-ui, sans-serif" font-weight="600">Almaty · felt at ~5 points</text>
+        <text x="578" y="335" fill="#efe4cf" font-size="15" font-family="Manrope, system-ui, sans-serif" font-weight="600">Epicentre · M 6.7</text>
+        <text x="420" y="210" fill="#ffc65c" font-size="16" font-family="Manrope, system-ui, sans-serif" font-weight="700">≈ 264 km</text>
+        <text x="20" y="400" fill="#c4b59a" font-size="12.5" font-family="Manrope, system-ui, sans-serif">Schematic, not to scale (offline view). Connect to the internet for the interactive map.</text>
+      </svg></div>
+    </figure>
+    <p>That night was a warning, not a disaster. Almaty sits in one of the most seismically active areas of Central Asia. The city's seismic microzoning map places it in a 9–10 point zone, it is crossed by 27 tectonic faults, and up to 200 weak earthquakes occur within 80 kilometres of it every year (Kazinform, 2024). The region's history shows what a strong quake can do: the 1911 earthquake killed more than 450 people in the area (GFDRR, 2015).</p>
+    <p>The city knows how exposed it is. Seismic audits in 2017–2018 and 2023–2024 covered 21,441 buildings, and 26% of them, about 5,600, need seismic strengthening or demolition (Kazinform, 2024). In the first audit alone, more than 3,000 buildings were found not to be earthquake-resistant, and 2,339 of them were apartment buildings, in a city with more than 9,600 apartment buildings in total (BES.media, 2026).</p>
+    <div data-anim class="stats">
+      <div class="stat"><svg class="icon stat-ic" viewBox="0 0 24 24" aria-hidden="true"><path pathLength="1" d="M5 21V3h10v18"/><path pathLength="1" d="M15 9h4v12"/><path pathLength="1" d="M3 21h18"/><path pathLength="1" d="M8 7h1"/><path pathLength="1" d="M11 7h1"/><path pathLength="1" d="M8 11h1"/><path pathLength="1" d="M11 11h1"/><path pathLength="1" d="M8 15h1"/><path pathLength="1" d="M11 15h1"/></svg><div class="n" data-to="21441">21,441</div><div class="l">buildings checked in two seismic audits</div><div class="s">Kazinform, 2024</div></div>
+      <div class="stat"><svg class="icon stat-ic" viewBox="0 0 24 24" aria-hidden="true"><path pathLength="1" d="M12 3l10 18H2z"/><path pathLength="1" d="M12 10v5"/><path pathLength="1" d="M12 18h.01"/></svg><div class="n" data-to="5600" data-pre="~">~5,600</div><div class="l">need strengthening or demolition (26%)</div><div class="s">Kazinform, 2024</div></div>
+      <div class="stat"><svg class="icon stat-ic" viewBox="0 0 24 24" aria-hidden="true"><path pathLength="1" d="M4 11l8-7 8 7"/><path pathLength="1" d="M6 9.5V20h12V9.5"/><path pathLength="1" d="M10 20v-5h4v5"/></svg><div class="n" data-to="2339">2,339</div><div class="l">apartment buildings flagged in the first audit</div><div class="s">BES.media, 2026</div></div>
+      <div class="stat hi"><svg class="icon stat-ic" viewBox="0 0 24 24" aria-hidden="true"><path pathLength="1" d="M5 16a7 7 0 0 1 14 0"/><path pathLength="1" d="M12 5v5"/><path pathLength="1" d="M9 6.5V10"/><path pathLength="1" d="M15 6.5V10"/><path pathLength="1" d="M3 16h18v3H3z"/></svg><div class="n" data-to="200">200</div><div class="l">apartment buildings the city plans to strengthen by 2030</div><div class="s">Milayarova, 2026</div></div>
+    </div>
+    <p>The effort is growing. Based on the 2023–2024 audits, the city approved an action plan for 2026–2035 to improve the earthquake resistance of residential and social buildings (Akimat of Almaty, 2026). Under its 2026–2030 development plan, it also intends to screen about 200,000 buildings, give each one a "seismic passport", and collect the results in a single digital register (Milayarova, 2026).</p>
+    <p>Knowing the risk has not meant fixing it for residents. The city's emergency department says strengthening work continues, but schools, hospitals and other public buildings come first, partly because they serve as official shelters in an emergency (BES.media, 2026). The 2026–2030 plan follows the same order: it aims to strengthen at least 150 key life-support facilities, about 400 social facilities, and at least 200 apartment buildings (Milayarova, 2026). Two hundred is fewer than one in ten of the 2,339 apartment buildings flagged in the first audit, although some may have been repaired or demolished since. The wider renovation programme for dilapidated housing shows the same gap between plans and buildings: 670 owners moved into new flats in 2025, meeting the resettlement target, but only 18 old houses were demolished, against 78 planned (Vladimirskaya, 2026; 24.kz, 2025).</p>
+    <figure data-anim class="viz"><figcaption class="t">Who gets strengthened first?</figcaption><div class="sub">Targets in the city's 2026–2030 plan, set against the 2,339 apartment buildings flagged in the first audit.</div><div class="hrow"><span>Apartment buildings flagged</span><div class="track"><div class="fill ghost" data-w="100.0"></div></div><span class="hval">2,339</span></div><div class="hrow"><span>Social facilities</span><div class="track"><div class="fill glow" data-w="17.1"></div></div><span class="hval">~400</span></div><div class="hrow"><span>Apartment buildings</span><div class="track"><div class="fill risk" data-w="8.6"></div></div><span class="hval">≥200</span></div><div class="hrow"><span>Life-support facilities</span><div class="track"><div class="fill " data-w="6.4"></div></div><span class="hval">≥150</span></div><div class="sub" style="margin-top:18px">Renovation programme, 2025</div><div class="hrow"><span>Houses demolished (of 78 planned)</span><div class="track"><div class="fill risk" data-w="23.1"></div></div><span class="hval">18 / 78</span></div><div class="hrow"><span>Owners resettled (of 667 planned)</span><div class="track"><div class="fill " data-w="100.0"></div></div><span class="hval">670 / 667</span></div><div class="src">Sources: Milayarova (2026); BES.media (2026); Vladimirskaya (2026); 24.kz (2025).</div></figure>
+    <p>Residents also cannot easily see the information these decisions rest on. In 2019, officials promised to publish every building's passport online (Informburo, 2019). Instead, the head of the city's urban planning department said in 2025 that the new database would have only limited access: emergency services, interested parties and community representatives would see it, owners "probably" would, and people planning to buy a flat might receive data on request (BES.media, 2025).</p>
+    <div data-anim class="access">
+      <div class="t">Who gets to see the seismic database?</div>
+      <div class="sub">As described by the head of the city's urban planning department in 2025</div>
+      <div class="lvl"><span><svg class="icon " viewBox="0 0 24 24" aria-hidden="true"><path pathLength="1" d="M7 18v-6a5 5 0 0 1 10 0v6"/><path pathLength="1" d="M5 21h14"/><path pathLength="1" d="M12 2.5v1.5"/><path pathLength="1" d="M4.2 6.2l1 1"/><path pathLength="1" d="M19.8 6.2l-1 1"/><path pathLength="1" d="M9.5 18v-5"/></svg>Emergency services</span><div class="bar yes">Access</div></div>
+      <div class="lvl"><span><svg class="icon " viewBox="0 0 24 24" aria-hidden="true"><path pathLength="1" d="M3 8h18v12H3z"/><path pathLength="1" d="M8 8V5h8v3"/><path pathLength="1" d="M3 13h18"/></svg>"Interested parties"</span><div class="bar yes">Access</div></div>
+      <div class="lvl"><span><svg class="icon " viewBox="0 0 24 24" aria-hidden="true"><path pathLength="1" d="M9 11a3.5 3.5 0 1 0 0-7a3.5 3.5 0 0 0 0 7z"/><path pathLength="1" d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path pathLength="1" d="M16 4.5a3.5 3.5 0 0 1 0 6.5"/><path pathLength="1" d="M18 14.5c2 .6 3.5 2.6 3.5 5.5"/></svg>Community representatives</span><div class="bar yes">Access</div></div>
+      <div class="lvl"><span><svg class="icon " viewBox="0 0 24 24" aria-hidden="true"><path pathLength="1" d="M8 16a4 4 0 1 0 0-8a4 4 0 0 0 0 8z"/><path pathLength="1" d="M12 12h9"/><path pathLength="1" d="M18 12v3"/><path pathLength="1" d="M21 12v2"/></svg>Owners</span><div class="bar maybe">"Probably"</div></div>
+      <div class="lvl"><span><svg class="icon " viewBox="0 0 24 24" aria-hidden="true"><path pathLength="1" d="M3 12V4h8l10 10-8 8z"/><path pathLength="1" d="M7.5 7.5h.01"/></svg>People buying a flat</span><div class="bar req">On request</div></div>
+      <div class="lvl"><span><svg class="icon " viewBox="0 0 24 24" aria-hidden="true"><path pathLength="1" d="M3 3l18 18"/><path pathLength="1" d="M10.6 6.1A9.8 9.8 0 0 1 12 6c5 0 9 6 9 6a17 17 0 0 1-3.3 3.8"/><path pathLength="1" d="M6.6 6.6C4.2 8.2 3 12 3 12s4 6 9 6c1.6 0 3-.4 4.3-1"/><path pathLength="1" d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>Tenants, the wider public</span><div class="bar no">Not mentioned</div></div>
+      <div class="src">Source: BES.media (2025). In 2019, officials had promised to publish every building's passport online (Informburo, 2019).</div>
+    </div>
+    <div class="question">
+      <div class="num">The social-science question</div>
+      <p>The city has assessed which apartment buildings would likely fail in a strong earthquake, but the people living in them cannot easily see those results and have little say in when, or whether, their homes will be strengthened. <strong>Who carries Almaty's earthquake risk, and who decides how it is reduced, using information that residents cannot see?</strong></p>
+    </div>
   </section>
 
   <section id="data">
-    <div class="num">Section 2</div>
+    <div class="num">Field note 02</div>
     <h2>Background &amp; data</h2>
-    <div class="todo">Maple writes: what the city, ministries and international bodies measure; what it shows; where the data is silent; how far it can be trusted.</div>
-    <div class="figure">[Your own chart goes here, built from real data.]</div>
+    <p>Four kinds of institutions measure Almaty's building risk, and each sees a different part of the problem. The Bureau of National Statistics counts housing in "emergency condition" (аварийное). In 2025, the number of such residential buildings across Kazakhstan rose by 7% to 2.6 thousand (Kapital.kz, 2026a, citing Ranking.kz's analysis of Bureau data). But this measures physical decay, not earthquake resistance, so national statistics say nothing about seismic vulnerability. The city akimat and KazNIISA, the national construction research institute, run the seismic audits: 21,441 buildings checked in 2017–2018 and 2023–2024, with 26% failing (Kazinform, 2024). Their building-by-building results are not public (BES.media, 2025). The city's renovation programme counts "dilapidated" low-rise housing, a separate category from "not earthquake-resistant." Finally, the World Bank and researchers build risk models. The World Bank's regional model estimates that an Almaty earthquake of magnitude 6.6, a loss expected roughly once a century, would cause about US$1.4 billion in losses and 367 deaths. Its authors warn, though, that it is detailed enough only to start a policy dialogue, not to plan specific interventions (Salgado-Gálvez et al., 2024).</p>
+    <figure data-anim class="viz"><figcaption class="t">Four institutions, four blind spots</figcaption><div class="sub">Who measures Almaty's building risk, what each sees, and what each misses.</div><div data-anim class="grid4"><div class="tile"><svg class="icon tile-ic" viewBox="0 0 24 24" aria-hidden="true"><path pathLength="1" d="M4 20V10"/><path pathLength="1" d="M10 20V4"/><path pathLength="1" d="M16 20v-7"/><path pathLength="1" d="M3 20h18"/></svg><b>Bureau of National Statistics</b><span class="sees">Sees:</span> housing in "emergency condition"<br><span class="miss">Misses:</span> earthquake resistance</div><div class="tile"><svg class="icon tile-ic" viewBox="0 0 24 24" aria-hidden="true"><path pathLength="1" d="M3 21h18"/><path pathLength="1" d="M4 10h16"/><path pathLength="1" d="M12 3l9 5H3z"/><path pathLength="1" d="M6 10v8"/><path pathLength="1" d="M10 10v8"/><path pathLength="1" d="M14 10v8"/><path pathLength="1" d="M18 10v8"/></svg><b>Akimat &amp; KazNIISA</b><span class="sees">Sees:</span> seismic audits, 21,441 buildings<br><span class="miss">Misses:</span> public access to results</div><div class="tile"><svg class="icon tile-ic" viewBox="0 0 24 24" aria-hidden="true"><path pathLength="1" d="M4 11l8-7 8 7"/><path pathLength="1" d="M6 9.5V20h12V9.5"/><path pathLength="1" d="M10 13l4 4"/><path pathLength="1" d="M14 13l-4 4"/></svg><b>Renovation programme</b><span class="sees">Sees:</span> "dilapidated" low-rise housing<br><span class="miss">Misses:</span> it is a different category from seismic risk</div><div class="tile"><svg class="icon tile-ic" viewBox="0 0 24 24" aria-hidden="true"><path pathLength="1" d="M12 21a9 9 0 1 0 0-18a9 9 0 0 0 0 18z"/><path pathLength="1" d="M3 12h18"/><path pathLength="1" d="M12 3c3 3.5 3 14.5 0 18"/><path pathLength="1" d="M12 3c-3 3.5-3 14.5 0 18"/></svg><b>World Bank &amp; researchers</b><span class="sees">Sees:</span> city- and region-wide risk<br><span class="miss">Misses:</span> which building is dangerous</div></div><div class="src">Sources: Kapital.kz (2026a); Kazinform (2024); BES.media (2025); Salgado-Gálvez et al. (2024).</div></figure>
+    <figure data-anim class="chart" id="many-numbers">
+      <figcaption class="chart-title">One city, many numbers</figcaption>
+      <div class="chart-sub">Each dot is one published figure, shown as % above the lowest figure for the same quantity. Hollow dots are a lower bound or a plan, not a count. Hover over a dot for its source.</div>
+      <div class="chart-wrap">
+        <svg viewBox="0 0 800 300" role="img" aria-labelledby="mn-t mn-d">
+          <title id="mn-t">One city, many numbers</title>
+          <desc id="mn-d">Published figures for three basic quantities disagree. Buildings surveyed in 2017 to 2018: from more than 10,000 to about 12,000, a spread of about 18 percent. Unsafe apartment buildings: 2,339 to 2,364, about 1 percent. Dilapidated houses: 1,366 to about 1,500, about 10 percent.</desc>
+          <g class="grid">
+            <line x1="280" y1="24" x2="280" y2="262"/><line x1="480" y1="24" x2="480" y2="262"/>
+            <line x1="580" y1="24" x2="580" y2="262"/><line x1="680" y1="24" x2="680" y2="262"/><line x1="780" y1="24" x2="780" y2="262"/>
+            <line class="zero" x1="380" y1="24" x2="380" y2="262"/>
+          </g>
+          <g class="axis">
+            <text x="280" y="282">−5%</text><text x="380" y="282">lowest</text><text x="480" y="282">+5%</text>
+            <text x="580" y="282">+10%</text><text x="680" y="282">+15%</text><text x="780" y="282">+20%</text>
+          </g>
+          <text class="rowt" x="0" y="66">Buildings surveyed, 2017–18</text>
+          <text class="rows" x="0" y="86">spread ≈ 18%</text>
+          <line pathLength="1" class="range" x1="342" y1="70" x2="734" y2="70"/>
+          <circle class="dot hollow" cx="342" cy="70" r="6" data-tip="More than 10,000 · Inbusiness.kz (2026)"/>
+          <circle class="dot" cx="380" cy="70" r="6" data-tip="10,196 · Shokbarov &amp; Temiraliuly (2021), sum of the two stages, p. 1597"/>
+          <circle class="dot" cx="444" cy="70" r="6" data-tip="10,525 · Shokbarov &amp; Temiraliuly (2021), abstract"/>
+          <circle class="dot" cx="734" cy="70" r="6" data-tip="About 12,000 · BES.media (2026), public council expert"/>
+          <text class="val" x="342" y="98">&gt;10,000</text>
+          <text class="val" x="380" y="54">10,196</text>
+          <text class="val" x="444" y="98">10,525</text>
+          <text class="val" x="734" y="54">~12,000</text>
+
+          <text class="rowt" x="0" y="146">Unsafe apartment buildings</text>
+          <text class="rows" x="0" y="166">spread ≈ 1%</text>
+          <line pathLength="1" class="range" x1="380" y1="150" x2="402" y2="150"/>
+          <circle class="dot" cx="380" cy="150" r="6" data-tip="2,339 · official figure (BES.media, 2026; Kazinform)"/>
+          <circle class="dot" cx="392" cy="150" r="6" data-tip="2,353 · Shokbarov &amp; Temiraliuly (2021), Figure 3"/>
+          <circle class="dot" cx="402" cy="150" r="6" data-tip="2,364 · calculated from the paper's 2017 and 2018 tables"/>
+          <text class="val" x="391" y="134">2,339 · 2,353 · 2,364</text>
+
+          <text class="rowt" x="0" y="226">Dilapidated houses</text>
+          <text class="rows" x="0" y="246">spread ≈ 10%</text>
+          <line pathLength="1" class="range" x1="380" y1="230" x2="576" y2="230"/>
+          <circle class="dot" cx="380" cy="230" r="6" data-tip="1,366 · former akim Y. Dossayev, April 2025 (Kapital.kz, 2026b)"/>
+          <circle class="dot hollow" cx="434" cy="230" r="6" data-tip="1,403 planned for demolition by 2030 · a plan, not a count (Kapital.kz, 2026b)"/>
+          <circle class="dot" cx="576" cy="230" r="6" data-tip="About 1,500 · 24.kz (2026)"/>
+          <text class="val" x="380" y="214">1,366</text>
+          <text class="val" x="434" y="258">1,403 (plan)</text>
+          <text class="val" x="576" y="214">~1,500</text>
+        </svg>
+        <div class="tip" id="mn-tip" hidden></div>
+      </div>
+      <details class="chart-table">
+        <summary>Show the numbers as a table</summary>
+        <table>
+          <tr><th>Quantity</th><th>Figure</th><th>Source</th></tr>
+          <tr><td>Buildings surveyed, 2017–18</td><td>more than 10,000</td><td>Inbusiness.kz (2026)</td></tr>
+          <tr><td></td><td>10,196</td><td>Shokbarov &amp; Temiraliuly (2021), p. 1597 (7,027 + 3,169)</td></tr>
+          <tr><td></td><td>10,525</td><td>Shokbarov &amp; Temiraliuly (2021), abstract</td></tr>
+          <tr><td></td><td>about 12,000</td><td>BES.media (2026)</td></tr>
+          <tr><td>Unsafe apartment buildings</td><td>2,339</td><td>BES.media (2026); Kazinform</td></tr>
+          <tr><td></td><td>2,353</td><td>Shokbarov &amp; Temiraliuly (2021), Figure 3</td></tr>
+          <tr><td></td><td>2,364</td><td>Calculated from the paper's tables (2,343 + 21)</td></tr>
+          <tr><td>Dilapidated houses</td><td>1,366</td><td>Kapital.kz (2026b), quoting the former akim, April 2025</td></tr>
+          <tr><td></td><td>1,403 (planned for demolition)</td><td>Kapital.kz (2026b)</td></tr>
+          <tr><td></td><td>about 1,500</td><td>24.kz (2026)</td></tr>
+        </table>
+      </details>
+    </figure>
+    <p>The chart puts the figures each source gives for the same quantity side by side. Each dot shows how far a figure sits above the lowest figure for that quantity, on one shared scale. The gaps differ a lot in size. Counts of unsafe apartment buildings almost agree: 2,339 in official statements (BES.media, 2026) against 2,364 when the audit's own tables are added up (Shokbarov &amp; Temiraliuly, 2021), a gap of about 1%. The size of the 2017–2018 audit varies much more: 10,196 objects if the two stages in the audit paper are summed, 10,525 in the same paper's abstract, "more than 10,000" in one news report (Inbusiness, 2026), and "about 12,000" in another (BES.media, 2026). That's a spread of about 18%. Dilapidated houses fall in between: 1,366 according to the former akim in April 2025, about 1,500 in another report, and 1,403 planned for demolition by 2030 (24.kz, 2026; Kapital.kz, 2026b). Some of this spread may come from different dates and definitions. The point is not that the numbers are badly wrong. It's that there is no single authoritative number, even for the city's headline figures.</p>
+    <h3>Can the numbers be trusted?</h3>
+    <p>The audit itself raises harder questions. Its two stages covered different buildings: 7,027 objects in 2017 and 3,169 in 2018, with different mixes of housing and public buildings (Shokbarov &amp; Temiraliuly, 2021). The results are far apart. In 2017, 58.9% of surveyed schools were earthquake-resistant; in 2018, 83.4% were. For apartment buildings, the figures were about 64% and 98.8%. The paper does not explain how buildings were chosen for each stage, or why the results differ so much. Its own arithmetic also slips: 4,147 resistant buildings out of 6,490 is 63.9%, not the 62.5% printed.</p>
+    <figure data-anim class="viz"><figcaption class="t">Same audit, two very different answers</figcaption><div class="sub">Share of surveyed buildings found earthquake-resistant in each stage of the 2017–2018 audit.</div><div class="legend"><span><i style="background:#54432f"></i>2017 stage</span><span><i style="background:var(--glow)"></i>2018 stage</span></div><div class="hrow pair"><span>Schools</span><div><div class="track"><div class="fill ghost" data-w="58.9"></div></div><div class="track"><div class="fill glow" data-w="83.4"></div></div></div><span class="hval">58.9%<br>83.4%</span></div><div class="hrow pair"><span>Kindergartens</span><div><div class="track"><div class="fill ghost" data-w="52.5"></div></div><div class="track"><div class="fill glow" data-w="80.8"></div></div></div><span class="hval">52.5%<br>80.8%</span></div><div class="hrow pair"><span>Apartment buildings</span><div><div class="track"><div class="fill ghost" data-w="63.9"></div></div><div class="track"><div class="fill glow" data-w="98.8"></div></div></div><span class="hval">63.9%*<br>98.8%</span></div><div class="src">Source: Shokbarov &amp; Temiraliuly (2021), pp. 1597–1599. *Recalculated from 4,147 of 6,490; the paper prints 62.5%. The paper does not explain why the stages differ.</div></figure>
+    <p>How the audit counts matters too. In 2017, only 39.8% of hospitals were earthquake-resistant by number of buildings, but 77.6% by floor area (Shokbarov &amp; Temiraliuly, 2021). The larger hospitals are mostly safe and many small ones are not. So the same audit could support "most hospitals are unsafe" or "most hospital space is safe," depending on who chooses the measure.</p>
+    <figure data-anim class="viz"><figcaption class="t">Count buildings or count square metres?</figcaption><div class="sub">2017 stage: share earthquake-resistant, measured two ways. Same buildings, different story.</div><div class="legend"><span><i style="background:#54432f"></i>by number of buildings</span><span><i style="background:var(--glow)"></i>by floor area</span></div><div class="hrow pair"><span>Hospitals</span><div><div class="track"><div class="fill ghost" data-w="39.8"></div></div><div class="track"><div class="fill glow" data-w="77.6"></div></div></div><span class="hval">39.8%<br>77.6%</span></div><div class="hrow pair"><span>Schools</span><div><div class="track"><div class="fill ghost" data-w="58.9"></div></div><div class="track"><div class="fill glow" data-w="73.6"></div></div></div><span class="hval">58.9%<br>73.6%</span></div><div class="hrow pair"><span>Kindergartens</span><div><div class="track"><div class="fill ghost" data-w="52.5"></div></div><div class="track"><div class="fill glow" data-w="62.1"></div></div></div><span class="hval">52.5%<br>62.1%</span></div><div class="src">Source: Shokbarov &amp; Temiraliuly (2021), p. 1598.</div></figure>
+    <p>Independence is a further question. In a 2024 discussion at the Almaty Union of Architects, recorded by journalist Askhat Niyazov, architects argued that the state is effectively absent when new buildings are accepted. That process is left to four interested parties: the client, the developer, the authorial supervision and the technical supervision (Niyazov, 2024, 31:23–31:52). They noted that Almaty has no building codes of its own, unlike Astana, and called for a full audit of buildings constructed after 2016, when oversight weakened (Niyazov, 2024, 32:04–33:11). They also pointed out that Almaty Genplan, a major design organisation, was founded by the city's Department of Urban Planning, so many assessors depend on the authority whose decisions they assess (Niyazov, 2024, 1:44:33–1:45:17).</p>
+    <h3>Where the data goes silent</h3>
+    <p>Four silences matter most for this project. How many people live in the flagged buildings is not published anywhere I could find. Who they are is unknown: there is no data on income, age, or whether residents are owners or renters. Buildings constructed after 2016, which the architects describe as poorly checked, are not reported as a separate group. And private houses, including homes in the foothills, sit outside the apartment-building counts entirely. The question this project asks, who carries Almaty's earthquake risk, is the question the data is least able to answer.</p>
+    <figure data-anim class="viz"><figcaption class="t">What the data cannot tell us</figcaption><div data-anim class="grid4"><div class="tile"><svg class="icon tile-ic" viewBox="0 0 24 24" aria-hidden="true"><path pathLength="1" d="M9 11a3.5 3.5 0 1 0 0-7a3.5 3.5 0 0 0 0 7z"/><path pathLength="1" d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path pathLength="1" d="M16 4.5a3.5 3.5 0 0 1 0 6.5"/><path pathLength="1" d="M18 14.5c2 .6 3.5 2.6 3.5 5.5"/></svg><div class="big">?</div><b>How many people</b>live in the flagged buildings</div><div class="tile"><svg class="icon tile-ic" viewBox="0 0 24 24" aria-hidden="true"><path pathLength="1" d="M3 5h18v14H3z"/><path pathLength="1" d="M8 12a2 2 0 1 0 0-4a2 2 0 0 0 0 4z"/><path pathLength="1" d="M5 16c.5-1.7 1.6-2.5 3-2.5s2.5.8 3 2.5"/><path pathLength="1" d="M14 9h4"/><path pathLength="1" d="M14 13h4"/></svg><div class="big">?</div><b>Who they are</b>income, age, owners or renters</div><div class="tile"><svg class="icon tile-ic" viewBox="0 0 24 24" aria-hidden="true"><path pathLength="1" d="M4 5h16v15H4z"/><path pathLength="1" d="M4 10h16"/><path pathLength="1" d="M9 3v4"/><path pathLength="1" d="M15 3v4"/></svg><div class="big">2016+</div><b>Newer buildings</b>not reported as a separate group</div><div class="tile"><div class="big"><svg class="icon big-ic" viewBox="0 0 24 24" aria-hidden="true"><path pathLength="1" d="M4 11l8-7 8 7"/><path pathLength="1" d="M6 9.5V20h12V9.5"/><path pathLength="1" d="M10 20v-5h4v5"/></svg></div><b>Private houses</b>outside the apartment-building counts</div></div></figure>
   </section>
 
   <section id="research">
-    <div class="num">Section 3</div>
+    <div class="num">Field note 03</div>
     <h2>Current state of research</h2>
-    <div class="todo">Maple writes: 6+ academic sources grouped by approach. What is known, contested, missing. End with the gap.</div>
+    <p>Research on Almaty's earthquake risk falls into four approaches. Each answers a different question, and they rarely draw on each other.</p>
+    <figure data-anim class="viz"><figcaption class="t">Four approaches, one missing piece</figcaption><div data-anim class="grid4"><div class="tile"><svg class="icon tile-ic" viewBox="0 0 24 24" aria-hidden="true"><path pathLength="1" d="M3 20l6-10 4 6 3-4 5 8z"/><path pathLength="1" d="M8 12l1.5 1.5L11 12"/></svg><b>Hazard models</b>Where could the ground shake?<br><span class="tag no">Scale: city / region</span></div><div class="tile"><svg class="icon tile-ic" viewBox="0 0 24 24" aria-hidden="true"><path pathLength="1" d="M5 21V3h10v18"/><path pathLength="1" d="M15 9h4v12"/><path pathLength="1" d="M3 21h18"/><path pathLength="1" d="M8 7h1"/><path pathLength="1" d="M11 7h1"/><path pathLength="1" d="M8 11h1"/><path pathLength="1" d="M11 11h1"/><path pathLength="1" d="M8 15h1"/><path pathLength="1" d="M11 15h1"/></svg><b>Engineering</b>Which buildings would fail?<br><span class="tag no">Scale: building</span></div><div class="tile"><svg class="icon tile-ic" viewBox="0 0 24 24" aria-hidden="true"><path pathLength="1" d="M9 11a3.5 3.5 0 1 0 0-7a3.5 3.5 0 0 0 0 7z"/><path pathLength="1" d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path pathLength="1" d="M16 4.5a3.5 3.5 0 0 1 0 6.5"/><path pathLength="1" d="M18 14.5c2 .6 3.5 2.6 3.5 5.5"/></svg><b>Social vulnerability</b>Who suffers when they fail?<br><span class="tag yes">Sees people</span> <span class="tag no">Not applied to Almaty</span></div><div class="tile"><svg class="icon tile-ic" viewBox="0 0 24 24" aria-hidden="true"><path pathLength="1" d="M7 7h10v10H7z"/><path pathLength="1" d="M10 10h4v4h-4z"/><path pathLength="1" d="M9 3v4"/><path pathLength="1" d="M15 3v4"/><path pathLength="1" d="M9 17v4"/><path pathLength="1" d="M15 17v4"/><path pathLength="1" d="M3 9h4"/><path pathLength="1" d="M3 15h4"/><path pathLength="1" d="M17 9h4"/><path pathLength="1" d="M17 15h4"/></svg><b>AI screening</b>Can machines audit faster?<br><span class="tag no">Accuracy, not accountability</span></div></div></figure>
+    <h3>Hazard models: where could the ground shake, and how hard?</h3>
+    <p>The first approach models the earthquake itself. Using high-resolution satellite elevation data, Amey et al. (2021) identified buried faults beneath and north of Almaty that had not been properly mapped. In their most damaging scenario, a magnitude 6.5 earthquake on a hidden thrust fault under the city, they estimate about 12,300 ± 5,000 completely damaged buildings and 4,100 ± 3,500 deaths. The World Bank's regional model takes a wider view. Salgado-Gálvez et al. (2024) estimate earthquake losses for five Central Asian countries at the country and oblast level. For an Almaty scenario of magnitude 6.6, they estimate about US$1.4 billion in losses and 367 deaths. The two studies model different earthquakes in different places, so their results are not directly comparable. Still, the order-of-magnitude difference in expected deaths shows how much the picture depends on the scenario chosen. Both work at the scale of the city or region: they show how dangerous a place is, not which building is dangerous.</p>
+    <h3>Engineering vulnerability: which buildings would fail?</h3>
+    <p>The second approach moves to individual buildings. The city's 2017–2018 certification programme, described by Shokbarov and Temiraliuly (2021), combined visual inspection of buildings, classification on the MSK-64(K) intensity scale, and electronic "passports" linked to a city map. It is the closest thing Almaty has to a building-by-building inventory. Rashid et al. (2023) used construction data from the national construction institute, KazNIISA, to assess Soviet-era residential buildings on the European Macroseismic Scale (EMS-98). They classify building types by their likely damage in strong earthquakes, with unreinforced masonry among the most vulnerable. This approach is precise about structures, but it treats a building as concrete and steel. It does not ask who lives inside, or who is told the result.</p>
+    <h3>Social vulnerability: who suffers when buildings fail?</h3>
+    <p>The third approach shifts the focus to people. Cutter, Boruff and Shirley (2003) built a Social Vulnerability Index for US counties, reducing 42 social and economic variables to 11 factors, such as wealth, age and housing type. They showed that the same hazard harms places differently depending on who lives there. Wisner et al. (2004) go further and argue that disasters are not purely natural. They happen where a hazard meets vulnerability produced by poverty, weak institutions and unequal power. From this angle, the key question for Almaty is not only which buildings would collapse, but why particular people still live in them, and who decides when that changes. I found no study that applies this approach to Almaty's building audits.</p>
+    <h3>AI screening: can machines do the audit faster?</h3>
+    <p>The fourth approach asks whether artificial intelligence can replace slow manual surveys. Aravena Pelizari et al. (2021) trained deep-learning models on Google Street View images of buildings in Santiago, Chile. Their models identified structural type, construction material and height, with agreement scores above κ = 0.81 on every task. Yu et al. (2020) built a model that flags "soft-story" buildings, a type prone to collapse because of a weak ground floor, from street-view images in California, reaching about 83–88% accuracy. Kumar et al. (2026) complicate this picture. Testing ten building attributes in a district of Lisbon, their best models reached about 81% accuracy overall, but only about 57% when every class is weighted equally. The models handled common building types well and often misclassified rare ones. For ground-floor height, a key visual cue for soft-story buildings, the best model reached only about 26%. Each of these studies also trained and tested its model within the same city. None tested whether a model built in one city works in another.</p>
+    <figure data-anim class="viz"><figcaption class="t">How "accurate" is accurate?</figcaption><div class="sub">One study's best models, one city (Lisbon), three ways of scoring them.</div><div class="hrow"><span>Overall accuracy</span><div class="track"><div class="fill " data-w="81.0"></div></div><span class="hval">~81%</span></div><div class="hrow"><span>Every class weighted equally</span><div class="track"><div class="fill glow" data-w="57.0"></div></div><span class="hval">~57%</span></div><div class="hrow"><span>Ground-floor height</span><div class="track"><div class="fill risk" data-w="26.0"></div></div><span class="hval">~26%</span></div><div class="src">Source: Kumar et al. (2026).</div></figure>
+    <div class="question">
+      <div class="num">The gap</div>
+      <p style="font-size:18px">Research on Almaty tells us where the ground could shake (hazard models) and which buildings are likely to fail (engineering studies). Social-vulnerability research shows that who lives in those buildings matters as much as how they are built, but no study I found links Almaty's building audits to the people inside them. AI studies report how accurate a model is, on average, in the city where it was trained. They do not ask whether it works in a new city, whether it misses rare but dangerous buildings, or who controls and sees its results. <strong>This project sits in that gap: before asking whether AI can screen Almaty's buildings, it asks who the screening would serve.</strong></p>
+    </div>
   </section>
 
   <section id="solution">
-    <div class="num">Section 4</div>
+    <div class="num">Field note 04</div>
     <h2>The AI-assisted solution, and what it would cost</h2>
-    <h3>The proposal</h3>
-    <div class="todo">Maple writes: what system, doing what, run by whom, reaching whom. 2+ real case studies.</div>
-    <h3>The bill</h3>
-    <div class="bill">
-      <div><strong>Environmental</strong>[energy, water, compute vs Kazakhstan's grid]</div>
-      <div><strong>Economic</strong>[cost, who pays, who profits]</div>
-      <div><strong>Labor</strong>[whose work changes; hidden labor]</div>
-      <div><strong>Political &amp; governance</strong>[control, surveillance, data localisation, AI Law No. 230-VIII]</div>
-      <div><strong>Data ethics</strong>[what data, whose consent, what could go wrong]</div>
+    <h3>The proposal: screen the buildings nobody has checked</h3>
+    <p>Almaty does not mainly need AI to find unsafe buildings it already knows about. Its audits have flagged about 5,600 (Kazinform, 2024). What it lacks is coverage of buildings outside those audits, and a fair, visible way to decide who is helped first. So the proposal is narrow.</p>
+    <div data-anim class="spec">
+      <div><strong>What the AI does</strong>A vehicle-mounted camera system collects street-level images across the city. A deep-learning model, trained on photos that local engineers have labelled, flags buildings with visible warning signs, such as a soft, open ground floor, unreinforced masonry, or added storeys. The model does not declare any building safe or unsafe. It ranks buildings for inspection, and only an engineer's visit produces a verdict.</div>
+      <div><strong>Where it is aimed</strong>It focuses on what the audits miss: buildings constructed after 2016, which the architects describe as poorly checked (Niyazov, 2024), and private houses outside the apartment-building counts.</div>
+      <div><strong>Who runs it</strong>An independent team, such as a university research group, works under a public council that includes residents. The akimat funds it but does not grade its own buildings. This responds to the architects' warning that assessors depend on the city they assess (Niyazov, 2024).</div>
+      <div><strong>Who sees the results</strong>Every resident can look up the status of their own building, and the criteria for ranking buildings are published. The city's planned digital register (Milayarova, 2026) would be open to residents by default, not only on request (BES.media, 2025).</div>
     </div>
+    <figure data-anim class="viz"><figcaption class="t">How the system would work</figcaption><div class="sub">The model only decides where to look first. People make every verdict.</div><div data-anim class="pipe"><div class="step"><svg class="icon tile-ic" viewBox="0 0 24 24" aria-hidden="true"><path pathLength="1" d="M4 7h3l2-2h6l2 2h3v12H4z"/><path pathLength="1" d="M12 16a3.5 3.5 0 1 0 0-7a3.5 3.5 0 0 0 0 7z"/></svg><b>Street images</b>A camera vehicle photographs buildings the audits missed</div><div class="step"><svg class="icon tile-ic" viewBox="0 0 24 24" aria-hidden="true"><path pathLength="1" d="M7 7h10v10H7z"/><path pathLength="1" d="M10 10h4v4h-4z"/><path pathLength="1" d="M9 3v4"/><path pathLength="1" d="M15 3v4"/><path pathLength="1" d="M9 17v4"/><path pathLength="1" d="M15 17v4"/><path pathLength="1" d="M3 9h4"/><path pathLength="1" d="M3 15h4"/><path pathLength="1" d="M17 9h4"/><path pathLength="1" d="M17 15h4"/></svg><b>Model ranks</b>Flags visible warning signs. Never says "safe" or "unsafe"</div><div class="step human"><svg class="icon tile-ic" viewBox="0 0 24 24" aria-hidden="true"><path pathLength="1" d="M5 16a7 7 0 0 1 14 0"/><path pathLength="1" d="M12 5v5"/><path pathLength="1" d="M9 6.5V10"/><path pathLength="1" d="M15 6.5V10"/><path pathLength="1" d="M3 16h18v3H3z"/></svg><b>Engineer inspects</b>Only an on-site visit produces a verdict</div><div class="step human"><svg class="icon tile-ic" viewBox="0 0 24 24" aria-hidden="true"><path pathLength="1" d="M4 11l8-7 8 7"/><path pathLength="1" d="M6 9.5V20h12V9.5"/><path pathLength="1" d="M10 20v-5h4v5"/></svg><b>Resident sees it</b>Owners look up their building; ranking criteria are public</div></div></figure>
+    <p>This design is not speculative. Each part is already running somewhere.</p>
+    <div data-anim class="cases">
+      <div class="case">
+        <div class="num">Case study 1 · Bogotá, Colombia</div>
+        <h4>Screening before an earthquake</h4>
+        <p><strong>What was built.</strong> With support from the World Bank's Global Program for Resilient Housing, Bogotá maps neighbourhoods with a vehicle-mounted mobile-mapping system and drone imagery. Open-source machine-learning algorithms flag buildings that may be vulnerable to earthquakes, such as soft-story buildings, and an engineer then inspects each one (World Bank, 2021).</p>
+        <p><strong>What it achieved, honestly.</strong> Now in its third phase, the project covers up to 12 priority areas of about 20 square kilometres. It has produced a housing inventory and maps of where intervention may be needed, but no figures on completed inspections or retrofits (World Bank, 2021). The method is real; its effect on safety is not yet measured.</p>
+      </div>
+      <div class="case">
+        <div class="num">Case study 2 · Turkey, 2023</div>
+        <h4>Damage mapping after an earthquake</h4>
+        <p><strong>What was built.</strong> After the February 2023 earthquakes, Microsoft's AI for Good Lab worked with Turkey's disaster agency, AFAD, to estimate building-level damage in four cities from satellite images taken in the first three days. It estimated 3,849 damaged or destroyed buildings, with 7.44% of buildings in Kahramanmaraş visibly affected (Robinson et al., 2023).</p>
+        <p><strong>What an independent test found.</strong> Comparing Microsoft's model with Google's for health facilities, Ramachandran et al. (2025) found only fair agreement between them (κ = 0.32). Both caught just 42.9% of truly damaged facilities, often missing buildings reduced to rubble. The authors conclude that such models cannot yet replace ground inspections.</p>
+      </div>
+    </div>
+    <figure data-anim class="viz"><figcaption class="t">Turkey 2023: what the AI caught</figcaption><div class="sub">Share of truly damaged health facilities each model detected, from an independent test.</div><div class="hrow"><span>Microsoft model</span><div class="track"><div class="fill risk" data-w="42.9"></div></div><span class="hval">42.9%</span></div><div class="hrow"><span>Google model</span><div class="track"><div class="fill risk" data-w="42.9"></div></div><span class="hval">42.9%</span></div><div class="sub" style="margin-top:10px">Agreement between the two models: κ = 0.32 ("fair"). Many misses were buildings reduced to rubble.</div><div class="src">Source: Ramachandran et al. (2025).</div></figure>
+    <p>The lesson from both cases is the same: AI helps decide where humans should look first. It does not replace them. Research agrees: models miss rare building types (Kumar et al., 2026), and a photo cannot show what the architects most want checked, the foundations, rebar and concrete inside the walls (Niyazov, 2024). Here is the bill, item by item.</p>
+
+    <h3>The bill</h3>
+    <div data-anim class="bill">
+      <a href="#bill-env"><svg class="icon tile-ic" viewBox="0 0 24 24" aria-hidden="true"><path pathLength="1" d="M5 19c0-9 6-14 15-14c0 9-5 15-14 15"/><path pathLength="1" d="M5 19c3-4 6-6 9-7"/></svg><strong>Environmental</strong>Small, but coal-powered<br><em class="lvl-tag low">LOW</em></a>
+      <a href="#bill-eco"><svg class="icon tile-ic" viewBox="0 0 24 24" aria-hidden="true"><path pathLength="1" d="M12 9c4 0 7-1.3 7-3s-3-3-7-3-7 1.3-7 3 3 3 7 3z"/><path pathLength="1" d="M5 6v6c0 1.7 3 3 7 3s7-1.3 7-3V6"/><path pathLength="1" d="M5 12v6c0 1.7 3 3 7 3s7-1.3 7-3v-6"/></svg><strong>Economic</strong>Cheap to flag, expensive to fix<br><em class="lvl-tag med">MEDIUM</em></a>
+      <a href="#bill-lab"><svg class="icon tile-ic" viewBox="0 0 24 24" aria-hidden="true"><path pathLength="1" d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.5-2.5z"/></svg><strong>Labour</strong>The hidden human work grows<br><em class="lvl-tag med">MEDIUM</em></a>
+      <a href="#bill-gov" class="heavy"><svg class="icon tile-ic" viewBox="0 0 24 24" aria-hidden="true"><path pathLength="1" d="M12 3v18"/><path pathLength="1" d="M6 21h12"/><path pathLength="1" d="M5 7h14"/><path pathLength="1" d="M7 7l-3 7a3 3 0 0 0 6 0z"/><path pathLength="1" d="M17 7l-3 7a3 3 0 0 0 6 0z"/></svg><strong>Political &amp; governance</strong>The heaviest line<br><em class="lvl-tag high">HIGH</em></a>
+      <a href="#bill-eth" class="heavy"><svg class="icon tile-ic" viewBox="0 0 24 24" aria-hidden="true"><path pathLength="1" d="M12 3l8 3v6c0 5-3.5 8-8 9c-4.5-1-8-4-8-9V6z"/><path pathLength="1" d="M9 12l2 2 4-4"/></svg><strong>Data ethics</strong>The dilemma at the centre<br><em class="lvl-tag high">HIGH</em></a>
+    </div>
+    <div data-anim class="receipt" role="img" aria-label="Energy estimate receipt"><div class="rt">ENERGY BILL · MY ESTIMATE</div><div class="rl"><span>200,000 buildings × 5 angles</span><span>~1,000,000 images</span></div><div class="rl"><span>Classify at 50 images/second</span><span>~5.6 hours</span></div><div class="rl"><span>Running the model (300 W GPU)</span><span>&lt; 2 kWh</span></div><div class="rl"><span>Training (~100 GPU-hours)</span><span>~30 kWh</span></div><div class="rl"><span>× 2 for cooling, storage, other computers</span><span></span></div><div class="rl tot"><span>TOTAL</span><span>&lt; 100 kWh</span></div><div class="rn">Kazakhstan's grid: 62% coal (Ember, 2026). Not included: the mapping vehicle, drones and hardware.</div></div>
+    <p id="bill-env"><strong>Environmental: small, but coal-powered.</strong> These figures are my own rough estimate, so here is how I reached them. The city plans to screen about 200,000 buildings (Milayarova, 2026). If the camera vehicle captures each building from about five angles, which helps models classify more accurately (Kumar et al., 2026), that comes to roughly one million images. A standard image-classification model on a single graphics card (GPU) can classify at least 50 images per second, so one million images would take about 20,000 seconds, under six hours. At about 300 watts, that uses under 2 kWh. Training costs more. These models are usually adapted from ones already trained on general photos (Yu et al., 2020), but allowing for several test runs, I assume about 100 GPU-hours, or roughly 30 kWh. Doubling everything for cooling, storage and other computers still gives under 100 kWh. That fits a wider pattern: classification tasks use far less energy than generative AI such as chatbots (Luccioni et al., 2024). But Kazakhstan's electricity was 62% coal in 2025 (Ember, 2026), and the larger footprint is probably the mapping vehicle driving every street, plus the drones and hardware, which I could not estimate.</p>
+    <p id="bill-eco"><strong>Economic: cheap to flag, expensive to fix.</strong> The main costs are image collection, engineers' time labelling photos, inspections and software. The AI pays for none of the strengthening: the city's plan covers at least 200 apartment buildings by 2030 (Milayarova, 2026). Who profits: the technology vendor, and potentially developers, since a risk map can help justify demolition under the renovation programme. Who could lose: owners of flagged flats, whose property may become harder to sell. That is a plausible risk; I found no Almaty data measuring it.</p>
+    <p id="bill-lab"><strong>Labour: the hidden human work grows.</strong> AI systems rely on human "trainers" who label data and "verifiers" who check outputs (Tubaro et al., 2020). Here that work is skilled and expensive: engineers must label the training images and inspect every flagged building. The work does not disappear. It shifts from walking every street to reviewing what the model flags, and that review must be staffed and paid.</p>
+    <p id="bill-gov"><strong>Political and governance: the heaviest line.</strong> Kazakhstan's AI Law (No. 230-VIII), in force since 18 January 2026, classifies AI systems by risk and bans social scoring. But the system's owner assigns its risk category itself (EY, 2025), so a city-run model would grade its own risk level. Buribayeva et al. (2026) warn of a "neutrality effect" in Kazakhstan's public sector: decisions routed through technical systems can look more objective and harder to challenge even when they reproduce inequalities. They cite a closely related case, the removal of about 90,000 records from housing waiting lists using criteria that were never publicly explained. A ranking of whose building is inspected first risks the same, especially if it is trained on Almaty's inconsistent audit numbers (Section 2). The global frameworks point to the safeguards. UNESCO's Recommendation on the Ethics of AI (2021) calls for human oversight and determination, which is why engineers, not the model, make the final call. The OECD AI Principles (2019) say people affected by an AI system should be able to understand and challenge its outcome, which is why residents must see their building's ranking. Finally, personal data must be stored in Kazakhstan (Law No. 94-V, art. 12), which matters if a foreign vendor supplies the system.</p>
+    <p id="bill-eth"><strong>Data ethics: the dilemma at the centre.</strong> Street imagery captures faces, car plates and the outside of people's homes, and no one can consent on a public street. Faces and plates must be blurred and raw images deleted after use. The harder problem is disclosure. If results are public, residents of flagged buildings may face panic, falling prices or pressure to leave. If they are closed, the information gap this project began with continues, now with a more powerful tool on one side.</p>
   </section>
 
   <section id="verdict">
     <div class="num">Verdict</div>
     <h2>Should Kazakhstan do this?</h2>
-    <div class="verdict">[Yes / Only under these conditions / No, and here is why]</div>
-    <div class="todo">Maple writes: the verdict must follow from the bill above.</div>
+    <div class="verdict">Yes, only under these conditions, and not where the city might expect.</div>
+    <p>AI screening is cheap, quick and real, but every item on the bill points to the same weakness: not the camera, but who controls and sees the result. Kazakhstan should do this only if:</p>
+    <ol data-anim class="conditions">
+      <li><strong>The AI ranks; engineers decide.</strong> No building is labelled safe or unsafe without an inspection.</li>
+      <li><strong>It targets the gaps.</strong> Post-2016 buildings and private houses come first, not buildings already audited.</li>
+      <li><strong>It is independently run and evaluated.</strong> An outside team, a published method, and a public test of how well it works in Almaty.</li>
+      <li><strong>Residents see their own results.</strong> Ranking criteria are published, and owners can look up their building, with support such as retrofit options or legal advice, not just a warning.</li>
+      <li><strong>Privacy is protected by design.</strong> Blurring, deletion of raw images, and storage in Kazakhstan.</li>
+    </ol>
+    <p>If these conditions cannot be met, Almaty would be buying a faster way to make decisions residents still cannot see, and the honest answer is no.</p>
+    <p class="closing">The ground will move either way. The question is whether the people living on it are told.</p>
   </section>
 
   <section id="transparency">
     <div class="num">Disclosure</div>
     <h2>AI transparency statement</h2>
-    <div class="todo">Maple writes: what AI contributed to the project and the site, what you accepted, what you rejected and why.</div>
+    <p>This project was co-created by Korlan Zhomart and Claude (Anthropic). Claude found and checked sources, suggested structure and some phrasing, built the site, the chart code and the layout, and pushed back on my drafts. Gemini was used to summarise Askhat Niyazov's January 2024 special report. I accepted several of Claude's suggestions: changing "knows" to "has assessed" in my research question, moving the architects' discussion and the comparison of the 2017 and 2018 audit stages to Section 2, and plotting Chart C on a shared percentage scale so that small and large gaps look as different as they really are. I chose Chart C over the other options because it shows that even the city's basic counts disagree, which sets up my argument that an AI system would inherit those gaps; Chart D became a point in the text instead. The title and its pun were my own idea. Claude mixed up a 2008 survey with the 2017–18 audit, which was corrected. I chose the topic and the question, shaped the sections, directed revisions, and checked the numbers and statistics against the original sources, including several that Claude could not open. I also checked the timestamped passages I cite against the video myself.</p>
   </section>
 
   <section id="sources">
     <div class="num">References</div>
     <h2>Sources</h2>
-    <div class="todo">Every source you cite, checked by you.</div>
+    <div class="refs">
+      <p>24.kz. (2025). Более 43 тысяч алматинцев живут в ветхих домах. Почему программа реновации пока идет медленнее плана? [More than 43,000 Almaty residents live in dilapidated houses: Why is the renovation programme going slower than planned?]. https://24.kz/ru/news/economyc/779182-bolee-43-tysyach-almatintsev-zhivut-v-vetkhikh-domakh-pochemu-programma-renovatsii-poka-idet-medlennee-plana</p>
+      <p>24.kz. (2026, January 27). Ветхих домов в Алматы станет вдвое меньше [There will be half as many dilapidated houses in Almaty]. https://24.kz/ru/news/social/751256-vetkhikh-domov-v-almaty-stanet-vdvoe-menshe</p>
+      <p>Akimat of Almaty. (2026). В Алматы построены 35 сейсмостанций системы раннего предупреждения о землетрясениях [35 seismic stations of the earthquake early warning system have been built in Almaty]. Gov.kz. https://www.gov.kz/memleket/entities/almaty/press/news/details/1263620?lang=ru</p>
+      <p>Amey, R. M. J., Elliott, J. R., Hussain, E., Walker, R., Pagani, M., Silva, V., et al. (2021). Significant seismic risk potential from buried faults beneath Almaty city, Kazakhstan, revealed from high-resolution satellite DEMs. <em>Earth and Space Science, 8</em>, e2021EA001664.</p>
+      <p>Aravena Pelizari, P., Geiß, C., Aguirre, P., Merino Peña, Y., Taubenböck, H., et al. (2021). Automated building characterization for seismic risk assessment using street-level imagery and deep learning. <em>ISPRS Journal of Photogrammetry and Remote Sensing, 180</em>, 370–386.</p>
+      <p>BES.media. (2025). Базу данных сейсмоопасных домов готовят к запуску в Алматы [A database of earthquake-hazardous houses is being prepared for launch in Almaty]. https://bes.media/news/bazu-dannih-seysmoopasnih-domov-gotovyat-k-zapusku-v-almati/</p>
+      <p>BES.media. (2026). В Алматы насчитали более 2300 несейсмостойких жилых домов: что с ними делают [Almaty counted more than 2,300 non-earthquake-resistant residential buildings: What is being done with them]. https://bes.media/news/v-almaty-naschitali-bolee-2300-neseysmostoykih-zhilyh-domov-chto-s-nimi-delayut/</p>
+      <p>Buribayeva, M., Khamzina, Z., &amp; Buribayev, Y. (2026). Potential negative effects of artificial intelligence in Kazakhstan’s public sector: An analysis of hidden risks. <em>Frontiers in Artificial Intelligence, 9</em>, 1781993. https://doi.org/10.3389/frai.2026.1781993</p>
+      <p>Cutter, S. L., Boruff, B. J., &amp; Shirley, W. L. (2003). Social vulnerability to environmental hazards. <em>Social Science Quarterly, 84</em>(2), 242–261.</p>
+      <p>Daribay, A. (2024, January 23). Глава МЧС попросил казахстанцев не паниковать [The head of the Emergency Ministry asked Kazakhstanis not to panic]. Tengrinews.kz. https://tengrinews.kz/kazakhstan_news/glava-mchs-poprosil-kazahstantsev-ne-panikovat-524001/</p>
+      <p>Ember. (2026, November 3). Kazakhstan has the wind to power its demand growth. https://ember-energy.org/latest-insights/kazakhstan-has-the-wind-to-power-its-demand-growth/</p>
+      <p>EY. (2025, December). Law on Artificial Intelligence: Kazakhstan [Tax alert]. https://www.ey.com/en_kz/technical/tax-alerts/2025/12/law-on-artificial-intelligence-kazakhstan</p>
+      <p>Global Facility for Disaster Reduction and Recovery. (2015). Central Asia Earthquake Risk Reduction Forum: Forum proceedings. World Bank. https://www.gfdrr.org/sites/default/files/publication/CentralAsiaEarthquakeRiskReductionForumProceedings2015eng_0.pdf</p>
+      <p>Inbusiness.kz. (2026, October 2). Сейсмоусиление в Алматы: что с жилым фондом [Seismic strengthening in Almaty: What about the housing stock]. https://inbusiness.kz/ru/last/sejsmousilenie-v-almaty-chto-s-zhilym-fondom</p>
+      <p>Informburo. (2019). В Алматы 7 000 зданий проверили на сейсмостойкость, результат удовлетворительный [7,000 buildings in Almaty were checked for earthquake resistance, the result is satisfactory]. https://informburo.kz/novosti/v-almaty-7-000-zdaniy-proverili-na-seysmostoykost-rezultat-udovletvoritelnyy-.html</p>
+      
+      <p>Kapital.kz. (2026a). В 2025 году количество аварийных домов в Казахстане увеличилось на 7% [In 2025, the number of emergency houses in Kazakhstan increased by 7%]. https://kapital.kz/real_estate/145772/v-2025-godu-kolichestvo-avarijnyh-domov-v-kazahstane-uvelichilos-na-7percent.html</p>
+      <p>Kapital.kz. (2026b). В Алматы начали активный снос: уже переселены 204 жителя [Active demolition has begun in Almaty: 204 residents already resettled]. https://kapital.kz/real_estate/147117/v-almaty-nachali-aktivnyj-snos-uzhe-pereseleny-204-zhitelya.html</p>
+      <p>Kazinform. (2024). 5 600 зданий не соответствуют требованиям сейсмоустойчивости в Алматы [5,600 buildings do not meet seismic resistance requirements in Almaty]. https://www.inform.kz/ru/5-600-zdaniy-ne-sootvetstvuyut-trebovaniyam-seysmoustoychivosti-v-almati-2a8224</p>
+      <p>Kumar, R., Rota, C., Piccoli, F., &amp; Ciocca, G. (2026). Deep learning for building attribute classification from street-view images for seismic exposure modeling. <em>Applied Sciences, 16</em>(2), 875. https://doi.org/10.3390/app16020875</p>
+      <p>Law of the Republic of Kazakhstan No. 94-V "On Personal Data and Their Protection." (2013, May 21; as amended).</p>
+      <p>Law of the Republic of Kazakhstan No. 230-VIII "On Artificial Intelligence." (2025, November 17).</p>
+      <p>Luccioni, A. S., Jernite, Y., &amp; Strubell, E. (2024). Power hungry processing: Watts driving the cost of AI deployment? In <em>Proceedings of the 2024 ACM Conference on Fairness, Accountability, and Transparency</em> (pp. 85–99). https://doi.org/10.1145/3630106.3658542</p>
+      <p>Milayarova, I. (2026). Как Алматы готовят к землетрясению [How Almaty is being prepared for an earthquake]. Krisha.kz. https://krisha.kz/content/news/2026/2026-kak-almaty-gotovyat-k-zemletryaseniyu-i-drugim-chs</p>
+      <p>Niyazov, A. [Обожаю]. (2024, January 29). <em>Землетрясение в Алматы. Спецвыпуск</em> [Almaty earthquake: Special report] [Video]. YouTube. https://youtu.be/S6L4tWHb1MI</p>
+      <p>OECD. (2019). <em>Recommendation of the Council on Artificial Intelligence</em> (OECD/LEGAL/0449). OECD.</p>
+      <p>Rakhimzhan, N. (2024, January 23). Землетрясение в Алматы: что происходило в городе и реакция людей [Earthquake in Almaty: What happened in the city and how people reacted]. Tengrinews.kz. https://tengrinews.kz/kazakhstan_news/zemletryasenie-almatyi-proishodilo-gorode-reaktsiya-lyudey-523997/</p>
+      <p>Ramachandran, A., Yadav, A., &amp; Schroeder, A. (2025). Implementation of remote-sensing models to identify post-disaster health facility damage: Comparative approaches to the 2023 earthquake in Turkey. <em>PLOS Digital Health, 4</em>(10), e0001060. https://doi.org/10.1371/journal.pdig.0001060</p>
+      <p>Rashid, M. S., Zhang, D., Moon, S.-W., Sarkulova, D., Shokbarov, Y., &amp; Kim, J. (2023). Macro-seismic assessment for residential buildings constructed in the Soviet Union era in Almaty, Kazakhstan. <em>Buildings, 13</em>(4), 1053. https://doi.org/10.3390/buildings13041053</p>
+      <p>Robinson, C., Gupta, R., Fobi Nsutezo, S., Pound, E., Ortiz, A., Rosa, M., White, K., Dodhia, R., Zolli, A., Birge, C., &amp; Lavista Ferres, J. M. (2023). <em>Turkey earthquake report</em> (Technical Report MSR-TR-2023-7). Microsoft. https://www.microsoft.com/en-us/research/publication/turkey-earthquake-report/</p>
+      <p>Salgado-Gálvez, M. A., Ordaz, M., Huerta, B., Garay, O., Avelar, C., Fagà, E., Kohrangi, M., Ceresa, P., Triantafyllou, G., &amp; Begaliev, U. T. (2024). Development of a regionally consistent and fully probabilistic earthquake risk model for Central Asia. <em>Natural Hazards and Earth System Sciences, 24</em>(11), 3851. https://doi.org/10.5194/nhess-24-3851-2024</p>
+      <p>Shokbarov, Y., &amp; Temiraliuly, G. (2021, March 22–24). Expert assessment of seismic safety of buildings and structures in Almaty [Conference paper]. 1st Croatian Conference on Earthquake Engineering (1CroCEE), Zagreb, Croatia. https://doi.org/10.5592/CO/1CroCEE.2021.77</p>
+      <p>Tubaro, P., Casilli, A. A., &amp; Coville, M. (2020). The trainer, the verifier, the imitator: Three ways in which human platform workers support artificial intelligence. <em>Big Data &amp; Society, 7</em>(1). https://doi.org/10.1177/2053951720919776</p>
+      <p>UNESCO. (2021). <em>Recommendation on the ethics of artificial intelligence</em>. UNESCO.</p>
+      <p>Vladimirskaya, V. (2026, January 26). В Алматы 670 владельцев ветхого жилья переехали в новые благоустроенные квартиры [In Almaty, 670 owners of dilapidated housing moved into new comfortable flats]. Bizmedia.kz. https://bizmedia.kz/2026-01-26-v-almaty-670-vladelczev-vethogo-zhilya-pereehali-v-novye-blagoustroennye-kvartiry/</p>
+      <p>Wisner, B., Blaikie, P., Cannon, T., &amp; Davis, I. (2004). <em>At risk: Natural hazards, people&#8217;s vulnerability and disasters</em> (2nd ed.). Routledge.</p>
+      <p>World Bank. (2021, September 15). <em>A protective eye on Bogotá</em> [Feature story]. https://www.worldbank.org/en/news/feature/2021/09/15/a-protective-eye-on-bogot</p>
+      <p>Yu, Q., Wang, C., McKenna, F., Yu, S. X., Taciroglu, E., Cetiner, B., &amp; Law, K. H. (2020). Rapid visual screening of soft-story buildings from street view images using deep learning classification. <em>Earthquake Engineering and Engineering Vibration, 19</em>(4), 827–838. https://doi.org/10.1007/s11803-020-0598-2</p>
+    </div>
   </section>
 
 </main>
 
 <footer>
-  Maple · PLS419 AI from a Social Science Perspective · Nazarbayev University · Fall 2026
+    <svg class="footer-city" id="footer-city" viewBox="0 0 1200 190" preserveAspectRatio="xMidYMax slice" aria-hidden="true"></svg>
+  <div class="ft">Maple · PLS419 AI from a Social Science Perspective · Nazarbayev University · Fall 2026</div>
 </footer>
 
+<script>
+  (function () {
+    var wrap = document.querySelector('#many-numbers .chart-wrap');
+    if (!wrap) return;
+    var tip = document.getElementById('mn-tip');
+    wrap.querySelectorAll('.dot').forEach(function (d) {
+      function show() {
+        var r = d.getBoundingClientRect(), w = wrap.getBoundingClientRect();
+        tip.textContent = d.getAttribute('data-tip');
+        var x = r.left + r.width / 2 - w.left;
+        tip.style.left = Math.max(125, Math.min(w.width - 125, x)) + 'px';
+        tip.style.top = (r.top - w.top) + 'px';
+        tip.hidden = false;
+      }
+      d.addEventListener('mouseenter', show);
+      d.addEventListener('click', show);
+      d.addEventListener('mouseleave', function () { tip.hidden = true; });
+    });
+  })();
+</script>
+<script>
+(function () {
+  var NS = 'http://www.w3.org/2000/svg';
+  var seed = 7;
+  function rnd() { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; }
+  function el(tag, attrs, parent) { var e = document.createElementNS(NS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); parent.appendChild(e); return e; }
+
+  var stars = document.getElementById('stars');
+  for (var i = 0; i < 90; i++) el('circle', { cx: rnd() * 1200, cy: rnd() * 380, r: rnd() < .15 ? 1.6 : .9, fill: '#fff', opacity: (.35 + rnd() * .6).toFixed(2) }, stars);
+
+  function buildCity(g, baseY, scale, lit) {
+    var x = -10, wins = [];
+    var types = ['khrush', 'panel', 'house', 'tower', 'khrush', 'house', 'panel', 'mid'];
+    while (x < 1210) {
+      var t = types[Math.floor(rnd() * types.length)], w, h, floors, cols;
+      if (t === 'house') { w = 46; h = 34; }
+      else if (t === 'khrush') { w = 120 + rnd() * 50; floors = 5; }
+      else if (t === 'panel') { w = 90 + rnd() * 40; floors = 9; }
+      else if (t === 'mid') { w = 60 + rnd() * 30; floors = 11; }
+      else { w = 46 + rnd() * 20; floors = 14 + Math.floor(rnd() * 5); }
+      w *= scale;
+      if (t === 'house') {
+        h *= scale;
+        el('rect', { x: x, y: baseY - h, width: w, height: h, class: 'bld' }, g);
+        el('polygon', { points: (x - 4) + ',' + (baseY - h) + ' ' + (x + w / 2) + ',' + (baseY - h - 22 * scale) + ' ' + (x + w + 4) + ',' + (baseY - h), class: 'roof' }, g);
+        wins.push(el('rect', { x: x + w * .2, y: baseY - h * .7, width: w * .22, height: h * .32, class: 'win' }, g));
+        wins.push(el('rect', { x: x + w * .58, y: baseY - h * .7, width: w * .22, height: h * .32, class: 'win' }, g));
+      } else {
+        var fh = 13 * scale; h = floors * fh + 8 * scale;
+        el('rect', { x: x, y: baseY - h, width: w, height: h, class: 'bld' }, g);
+        if (t === 'tower') el('rect', { x: x + w * .4, y: baseY - h - 14 * scale, width: 3 * scale, height: 14 * scale, class: 'bld' }, g);
+        cols = Math.max(2, Math.floor(w / (12 * scale)));
+        var cw = w / cols;
+        for (var f = 0; f < floors; f++) for (var c = 0; c < cols; c++) {
+          wins.push(el('rect', { x: x + c * cw + cw * .28, y: baseY - h + 6 * scale + f * fh, width: cw * .44, height: fh * .5, class: 'win' }, g));
+        }
+      }
+      x += w + (4 + rnd() * 14) * scale;
+    }
+    wins.forEach(function (wn) { if (rnd() < lit) wn.classList.add('on'); });
+    return wins;
+  }
+
+  var city = document.getElementById('city');
+  var back = el('g', { opacity: '.55' }, city);
+  buildCity(back, 650, .7, .05);
+  var front = el('g', {}, city);
+  var wins = buildCity(front, 692, .95, .04);
+
+  var hero = document.getElementById('top');
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function quake() {
+    wins.forEach(function (wn) { if (rnd() < .9) wn.classList.remove('on'); });
+    hero.classList.remove('quaking'); void hero.offsetWidth; hero.classList.add('quaking');
+    wins.forEach(function (wn) {
+      if (rnd() < .42) setTimeout(function () { wn.classList.add('on'); }, reduce ? 0 : 500 + rnd() * 2600);
+    });
+  }
+  quake();
+  document.getElementById('replay').addEventListener('click', quake);
+
+  var fc = document.getElementById('footer-city');
+  if (fc) { var fg = el('g', {}, fc); seed = 21; buildCity(fg, 190, .7, .35); }
+
+  var tiles = document.querySelectorAll('.stat .n[data-to]');
+  function run(n) {
+    var to = +n.getAttribute('data-to'), pre = n.getAttribute('data-pre') || '', t0 = null;
+    if (reduce) { n.textContent = pre + to.toLocaleString('en-US'); return; }
+    function step(ts) { if (!t0) t0 = ts; var p = Math.min(1, (ts - t0) / 1200); n.textContent = pre + Math.round(to * (1 - Math.pow(1 - p, 3))).toLocaleString('en-US'); if (p < 1) requestAnimationFrame(step); }
+    requestAnimationFrame(step);
+  }
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { run(e.target); io.unobserve(e.target); } }); }, { threshold: .6 });
+    tiles.forEach(function (t) { io.observe(t); });
+  } else tiles.forEach(run);
+
+  var links = document.querySelectorAll('nav a');
+  var secs = Array.prototype.map.call(links, function (a) { return document.querySelector(a.getAttribute('href')); });
+  window.addEventListener('scroll', function () {
+    var y = window.scrollY + 120, idx = -1;
+    secs.forEach(function (s, i) { if (s && s.offsetTop <= y) idx = i; });
+    links.forEach(function (a, i) { a.classList.toggle('active', i === idx); });
+  }, { passive: true });
+})();
+</script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+(function () {
+  if (!window.L) return;
+  var box = document.getElementById('map'); if (!box) return;
+  box.innerHTML = '';
+  var almaty = [43.238, 76.889], epi = [41.22, 78.65];
+  var map = L.map('map', { scrollWheelZoom: false, attributionControl: true }).fitBounds([almaty, epi], { padding: [60, 60] });
+  L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+    maxZoom: 13,
+    attribution: 'Map data: &copy; OpenStreetMap contributors, SRTM | Map style: &copy; OpenTopoMap (CC-BY-SA)'
+  }).addTo(map);
+  [60, 130, 200].forEach(function (km) {
+    L.circle(epi, { radius: km * 1000, color: '#ef8a3c', weight: 1.5, opacity: .7, fillOpacity: .04, dashArray: '4 6' }).addTo(map);
+  });
+  L.polyline([almaty, epi], { color: '#2a2019', weight: 2.5, dashArray: '8 6' }).addTo(map)
+    .bindTooltip('≈ 264 km', { permanent: true, direction: 'center', className: 'map-label' });
+  L.marker(epi, { icon: L.divIcon({ className: '', html: '<div class="epi-pulse"></div>', iconSize: [18, 18], iconAnchor: [9, 9] }) }).addTo(map)
+    .bindTooltip('Epicentre · M 6.7 · 00:09', { permanent: true, direction: 'right', offset: [12, 0], className: 'map-label' });
+  L.marker(almaty, { icon: L.divIcon({ className: '', html: '<div class="city-dot"></div>', iconSize: [14, 14], iconAnchor: [7, 7] }) }).addTo(map)
+    .bindTooltip('Almaty · felt at ~5 points (MSK-64)', { permanent: true, direction: 'left', offset: [-10, 0], className: 'map-label' });
+})();
+</script>
+<script>
+(function () {
+  var fills = document.querySelectorAll('.fill[data-w]');
+  function go(f) { f.style.width = f.getAttribute('data-w') + '%'; }
+  if ('IntersectionObserver' in window && !(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) {
+    var io = new IntersectionObserver(function (es) { es.forEach(function (e) { if (e.isIntersecting) { go(e.target); io.unobserve(e.target); } }); }, { threshold: .3 });
+    fills.forEach(function (f) { io.observe(f); });
+  } else fills.forEach(go);
+})();
+</script>
+<script>
+(function () {
+  var nav = document.querySelector('nav'), hero = document.getElementById('top');
+  if (!nav || !hero) return;
+  function check() { nav.classList.toggle('underground', window.scrollY > hero.offsetHeight - nav.offsetHeight); }
+  window.addEventListener('scroll', check, { passive: true }); window.addEventListener('resize', check); check();
+})();
+</script>
+<script>
+(function () {
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce || !('IntersectionObserver' in window)) return;
+  document.documentElement.classList.add('js-reveal');
+  var secs = document.querySelectorAll('main > section');
+  secs.forEach(function (sec) {
+    var h = sec.querySelector('h2');
+    if (h) {
+      var words = h.textContent.trim().split(/\s+/);
+      h.innerHTML = words.map(function (w, i) { return '<span class="w" style="--i:' + i + '">' + w.replace(/&/g, '&amp;') + '</span>'; }).join(' ');
+    }
+    var k = 0;
+    Array.prototype.forEach.call(sec.children, function (c) {
+      if (c.classList.contains('num') || c.tagName === 'H2') return;
+      c.style.setProperty('--d', (0.55 + Math.min(k, 6) * 0.12) + 's'); k++;
+    });
+  });
+  function typeLabel(el) {
+    var full = el.textContent; el.textContent = ''; var cur = document.createElement('span'); cur.className = 'cursor';
+    var txt = document.createTextNode(''); el.appendChild(txt); el.appendChild(cur); var i = 0;
+    (function tick() { txt.data = full.slice(0, ++i); if (i < full.length) setTimeout(tick, 45); else setTimeout(function () { cur.remove(); }, 1200); })();
+  }
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      var sec = e.target; sec.classList.add('in'); io.unobserve(sec);
+      var lab = sec.querySelector(':scope > .num'); if (lab) typeLabel(lab);
+    });
+  }, { threshold: 0.06, rootMargin: '0px 0px -8% 0px' });
+  secs.forEach(function (s) { io.observe(s); });
+})();
+</script>
+<script>
+(function () {
+  if (!document.documentElement.classList.contains('js-reveal')) return;
+  var els = document.querySelectorAll('[data-anim]');
+  els.forEach(function (el) {
+    Array.prototype.forEach.call(el.children, function (c, i) { c.style.setProperty('--i', i); });
+  });
+  document.querySelectorAll('.chart .range').forEach(function (r, i) { r.style.setProperty('--k', i); });
+  document.querySelectorAll('.chart .dot').forEach(function (d, i) { d.style.setProperty('--k', i); });
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('play'); io.unobserve(e.target); } });
+  }, { threshold: 0.2 });
+  els.forEach(function (el) { io.observe(el); });
+})();
+</script>
 </body>
 </html>
